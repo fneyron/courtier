@@ -7,14 +7,16 @@ from app.home import blueprint
 from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import login_manager
-import sys
+import sys, os, quandl
 from jinja2 import TemplateNotFound
 
 
-@blueprint.route('/autocomplete', methods=['GET', 'POST'])
+@blueprint.route('/autocomplete', methods=['POST', 'GET'])
 @login_required
-def autocomplete(request):
-    print('pouet', file=sys.stderr)
+def autocomplete():
+    q = request.args.get('term', '')
+    res = request_iex_data(q)
+    print(res, file=sys.stderr)
 
     return 'pouet'
 

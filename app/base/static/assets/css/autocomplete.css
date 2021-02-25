@@ -1,0 +1,24 @@
+.ui-autocomplete {
+    margin-top: 25px !important;
+    -webkit-box-direction: normal;
+    list-style: none;
+    line-height: 56px;
+    margin: 0 !important;
+    left: 0 !important;
+    width: 100%;
+    position: absolute !important;
+    z-index: 1030;
+    background: #fff;
+    padding: 12px;
+    display: block;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ui-menu-item-wrapper {
+    padding-left: 20px;
+}
+
+.ui-state-hover, .ui-state-active {
+    background-color: rgba(202, 202, 202, 0.3);
+    border-radius: 2px;
+}

@@ -1,3 +1,6 @@
+<script src="/static/assets/js/vendor-all.min.js"></script>
+<script src="/static/assets/js/plugins/bootstrap.min.js"></script>
+<script src="/static/assets/js/pcoded.min.js"></script>
 <script src="/static/assets/js/plugins/jquery-ui.min.js"></script>
 <script>
 $(document).ready(function () {
@@ -8,14 +11,9 @@ $(document).ready(function () {
        "C",
        "C++",
     ];
-    $( "#autocomplete_id" ).autocomplete({
-       source: availableTutorials
+    $( "#search" ).autocomplete({
+       source: '/autocomplete'
     });
  });
 });
-
 </script>
-<script src="/static/assets/js/vendor-all.min.js"></script>
-<script src="/static/assets/js/plugins/bootstrap.min.js"></script>
-<script src="/static/assets/js/pcoded.min.js"></script>
-
