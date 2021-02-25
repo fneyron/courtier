@@ -6,3 +6,15 @@ flask_sqlalchemy==2.*
 email_validator
 python-decouple
 gunicorn
+quandl
+pandas
+plotly
+xlrd
+openpyxl
+html5lib
+yahoofinancials
+yfinance
+psycopg2
+pyEX
+currency_symbols
+pytrends

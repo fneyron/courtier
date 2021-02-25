@@ -26,14 +26,7 @@ class ProductionConfig(Config):
     REMEMBER_COOKIE_DURATION = 3600
 
     # PostgreSQL database
-    SQLALCHEMY_DATABASE_URI = '{}://{}:{}@{}:{}/{}'.format(
-        config( 'DB_ENGINE'   , default='postgresql'    ),
-        config( 'DB_USERNAME' , default='appseed'       ),
-        config( 'DB_PASS'     , default='pass'          ),
-        config( 'DB_HOST'     , default='localhost'     ),
-        config( 'DB_PORT'     , default=5432            ),
-        config( 'DB_NAME'     , default='appseed-flask' )
-    )
+    SQLALCHEMY_DATABASE_URI = 'postgres://kqxvoitulxmtju:5d3b3315884179f9c731a18163d2a99646ca0a97ea84fdc47c93d515b76f1780@ec2-54-78-36-245.eu-west-1.compute.amazonaws.com:5432/dfj29d5f51u532'
 
 class DebugConfig(Config):
     DEBUG = True
