@@ -1,4 +1,21 @@
+<script src="/static/assets/js/plugins/jquery-ui.min.js"></script>
+<script>
+$(document).ready(function () {
+  $(function() {
+    var availableTutorials  =  [
+       "ActionScript",
+       "Bootstrap",
+       "C",
+       "C++",
+    ];
+    $( "#autocomplete_id" ).autocomplete({
+       source: availableTutorials
+    });
+ });
+});
 
-    <script src="/static/assets/js/vendor-all.min.js"></script>
-    <script src="/static/assets/js/plugins/bootstrap.min.js"></script>
-    <script src="/static/assets/js/pcoded.min.js"></script>
+</script>
+<script src="/static/assets/js/vendor-all.min.js"></script>
+<script src="/static/assets/js/plugins/bootstrap.min.js"></script>
+<script src="/static/assets/js/pcoded.min.js"></script>
+
