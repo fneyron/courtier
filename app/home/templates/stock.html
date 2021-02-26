@@ -21,9 +21,24 @@
                     <div class="card-header">
                         <h5>Chart</h5>
                     </div>
-                    <div class="card-body pl-0 pb-0">
-                        <div id="unique-visitor-chart"></div>
+
+                    <div class="card-body pl-0">
+                        <div class="toolbar btn-group p-l-25">
+                            <button id="one_month" class="btn btn-sm btn-outline-primary">1M</button>
+                            <button id="six_months" class="btn btn-sm btn-outline-primary">6M</button>
+                            <button id="one_year" class="btn btn-sm btn-outline-primary active">1Y</button>
+                            <button id="ytd" class="btn btn-sm btn-outline-primary">YTD</button>
+                            <button id="all" class="btn btn-sm btn-outline-primary">ALL</button>
+                        </div>
+                        <div id="stock-main-chart"></div>
+                        <div class="resize-triggers">
+                            <div class="expand-trigger">
+                                <div style="width: 603px; height: 387px;"></div>
+                            </div>
+                            <div class="contract-trigger"></div>
+                        </div>
                     </div>
+
                 </div>
             </div>
             <div class="col-md-6 col-xl-4">
@@ -32,8 +47,9 @@
                         <h5>Informations</h5>
                     </div>
                     <div class="card-body">
-                        <div class="col text-center m-b-15">
-                            <img src="{{ data.yahoo.logo_url }}" height="100px"/>
+                        <div class="text-center m-b-30">
+                            <img class="hei-100 shadow rounded-circle mb-5 bg-white"
+                                 src="{{ data.yahoo.logo_url }}"/>
                         </div>
                         <dl class="dl-horizontal row">
                             <dt class="col-sm-4">Name</dt>
@@ -92,6 +108,7 @@
 
 <!-- Apex Chart -->
 <script src="/static/assets/js/plugins/apexcharts.min.js"></script>
+{% include 'includes/stock-chart.html' %}
 <!-- custom-chart js -->
 <script src="/static/assets/js/pages/dashboard-main.js"></script>
 

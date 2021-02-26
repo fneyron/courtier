@@ -49,29 +49,6 @@ def get_df_history(df, days=365, dt='Date'):
     return df.to_json(orient='records')
 
 
-def get_historic_values(ticker, period='max'):
-    tick = yf.Ticker(ticker)
-    df = tick.history(period="10y")
-    # df['Date'] = pd.to_datetime(df['Date'])
-    df_10y = df.groupby(pd.Grouper(freq="1W")).mean()
-
-    date_5y = datetime.datetime.now() - datetime.timedelta(days=5 * 365)
-    df_5y = df.loc[df.index > date_5y]
-    df_5y = df_5y.groupby(pd.Grouper(freq='1W')).mean()
-
-    date_1y = datetime.datetime.now() - datetime.timedelta(days=365)
-    df_1y = df.loc[df.index > date_1y]
-    print(df_1y, file=sys.stderr)
-    data = {
-        'info': tick.info,
-        'hist_10y': df_10y.reset_index().to_json(orient='records'),
-        'hist_5y': df_5y.reset_index().to_json(orient='records'),
-        'hist_1y': df_1y.reset_index().to_json(orient='records')
-    }
-
-    return data
-
-
 def get_currency_symbol(currency_code):
     return CurrencySymbols.get_symbol(currency_code)
 

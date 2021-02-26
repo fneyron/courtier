@@ -10,21 +10,31 @@ from flask_login import login_required, current_user
 from app import login_manager
 from jinja2 import TemplateNotFound
 import app.home.util as util
+import numpy as np
+import urllib
 import requests
 import pandas as pd
 import json
 import sys
 import yfinance as yf
 
+
 @blueprint.route('/stock/<ticker>')
 @login_required
 def stock(ticker):
-    timeframe = [10*365, 5*365, 365]
+    # timeframe = [10*365, 5*365, 365]
 
     # Yahoo Data
     yahoo = yf.Ticker(ticker)
-    df = yahoo.history()
-    tick = [(tf, util.get_df_history(df, tf)) for tf in timeframe]
+    df = yahoo.history(period='max').reset_index()
+    # multitick = {
+    #     'date': pd.to_datetime(df['Date']).tolist(),
+    #     'close': list(df['Close']),
+    #     'volume': list(df['Volume']),
+    # }
+    tick = [[x['Date'], x['Close']] for x in json.loads(df.to_json(orient='records'))]
+    print(tick, file=sys.stderr)
+    # tick = [(tf, util.get_df_history(df, tf)) for tf in timeframe]
 
     # PyTrends Data
     pytrend = util.get_pytrends_data(yahoo.info['shortName'].split(' ')[0])
@@ -33,12 +43,12 @@ def stock(ticker):
     iex_tick = util.convert_ticker('yahoo', 'iex', ticker)
     iex = util.get_iex_ticker(iex_tick)
 
-
     data = {
         'yahoo': yahoo.info,
         'iex': iex,
         'pytrend': pytrend,
         'tick': tick,
+        # 'multi': multitick,
     }
     return render_template('stock.html', segment=['stock', data['yahoo']['shortName']], data=data)
 
@@ -47,7 +57,8 @@ def stock(ticker):
 @login_required
 def search():
     if request.method == 'POST':
-        q = request.form.get('search')
+        q = urllib.parse.quote(request.form.get('search'))
+        print(q, file=sys.stderr)
         data = pd.read_html('https://finance.yahoo.com/lookup/all?s=%s&c=9999' % q, header=0)
         df: pd.DataFrame = data[0]
         df.columns = ['symbol', 'name', 'last', 'industry', 'type', 'exchange']
@@ -60,6 +71,7 @@ def search():
             'result': df,
         }
     return render_template('search_result.html', data=data)
+
 
 # @blueprint.route('/search', methods=['POST', 'GET'])
 # @login_required
