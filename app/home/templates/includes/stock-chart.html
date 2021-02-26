@@ -9,11 +9,11 @@ $(document).ready(function() {
                     yaxis: [{
                         y: {{ data.yahoo.twoHundredDayAverage }},
                         borderColor: '#999',
-                        logarithmic: true,
                         forceNiceScale: true,
                         label: {
                             show: true,
                             text: '200 Days Av.',
+                            align: 'left',
                             style: {
                                 color: "#fff",
                                 background: '#00E396'
@@ -25,6 +25,7 @@ $(document).ready(function() {
                         borderColor: '#999',
                         label: {
                             show: true,
+                            align: 'left',
                             text: '50 Days Av.',
                             style: {
                                 color: "#fff",
@@ -99,7 +100,7 @@ $(document).ready(function() {
                     xaxis: {
                         min: date.setMonth(date.getMonth() - 1),
                         max: undefined,
-                    }
+                    },
                 })
             })
             document.querySelector("#six_months").addEventListener('click', function(e) {

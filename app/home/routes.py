@@ -9,6 +9,7 @@ from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import login_manager
 from jinja2 import TemplateNotFound
+from app.home.filters import *
 import app.home.util as util
 import numpy as np
 import urllib
