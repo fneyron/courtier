@@ -9,6 +9,8 @@ $(document).ready(function() {
                     yaxis: [{
                         y: {{ data.yahoo.twoHundredDayAverage }},
                         borderColor: '#999',
+                        logarithmic: true,
+                        forceNiceScale: true,
                         label: {
                             show: true,
                             text: '200 Days Av.',
@@ -39,6 +41,7 @@ $(document).ready(function() {
                     enabled: false
                 },
                 series: [{
+                        name: "Value",
                         data: {{ data.tick }}
                     },
 

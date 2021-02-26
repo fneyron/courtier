@@ -26,22 +26,27 @@ def stock(ticker):
 
     # Yahoo Data
     yahoo = yf.Ticker(ticker)
-    df = yahoo.history(period='max').reset_index()
+    df = yf.download(ticker, period='10y').reset_index()
+    print(df.head())
+    #df = yahoo.history(period='max').reset_index()
+    #print(df.head())
     # multitick = {
     #     'date': pd.to_datetime(df['Date']).tolist(),
     #     'close': list(df['Close']),
     #     'volume': list(df['Volume']),
     # }
     tick = [[x['Date'], x['Close']] for x in json.loads(df.to_json(orient='records'))]
-    print(tick, file=sys.stderr)
+
     # tick = [(tf, util.get_df_history(df, tf)) for tf in timeframe]
 
     # PyTrends Data
     pytrend = util.get_pytrends_data(yahoo.info['shortName'].split(' ')[0])
+    print('pytrend finished')
 
     # IEX Data
     iex_tick = util.convert_ticker('yahoo', 'iex', ticker)
     iex = util.get_iex_ticker(iex_tick)
+    print('iex finished')
 
     data = {
         'yahoo': yahoo.info,
@@ -57,14 +62,18 @@ def stock(ticker):
 @login_required
 def search():
     if request.method == 'POST':
-        q = urllib.parse.quote(request.form.get('search'))
-        print(q, file=sys.stderr)
-        data = pd.read_html('https://finance.yahoo.com/lookup/all?s=%s&c=9999' % q, header=0)
-        df: pd.DataFrame = data[0]
-        df.columns = ['symbol', 'name', 'last', 'industry', 'type', 'exchange']
-        rows = len(df)
-        df = json.loads(df.to_json(orient='records'))
-        print(df, file=sys.stderr)
+        q = request.form.get('search')
+        try:
+            data = pd.read_html('https://finance.yahoo.com/lookup/all?s=%s&c=9999' % urllib.parse.quote(q), header=0)
+            df: pd.DataFrame = data[0]
+            df.columns = ['symbol', 'name', 'last', 'industry', 'type', 'exchange']
+            rows = len(df)
+            df = json.loads(df.to_json(orient='records'))
+        except:
+            df = []
+            rows = 0
+
+        #print(df, file=sys.stderr)
         data = {
             'query': q,
             'count': rows,

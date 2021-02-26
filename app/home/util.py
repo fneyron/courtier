@@ -96,7 +96,7 @@ def get_series_math(df):
 def get_pytrends_data(string):
     pytrends = TrendReq(hl='en-US', tz=360)
     query = string.split(' ')[0]
-    print(query, file=sys.stderr)
+    #print(query, file=sys.stderr)
     kw_list = [query]
     pytrends.build_payload(kw_list, cat=7, timeframe='today 12-m', geo='', gprop='')
     df = pytrends.interest_over_time().reset_index()
