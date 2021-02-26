@@ -1,0 +1,98 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        {% include 'includes/breadcrumb.html' %}
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+
+            <div class="col-md-12 col-xl-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Chart</h5>
+                    </div>
+                    <div class="card-body pl-0 pb-0">
+                        <div id="unique-visitor-chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Informations</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="col text-center m-b-15">
+                            <img src="{{ data.yahoo.logo_url }}" height="100px"/>
+                        </div>
+                        <dl class="dl-horizontal row">
+                            <dt class="col-sm-4">Name</dt>
+                            <dd class="col-sm-8">{{ data.yahoo.longName }}</dd>
+                            <dt class="col-sm-4 m-b-10">Description</dt>
+                            <div id="stock-desc" class="modal fade" tabindex="-1" role="dialog"
+                                 aria-labelledby="stock-desc" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="title">Description</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {% autoescape false %}
+                                            {{ data.yahoo.longBusinessSummary | replace(". ", ".<br/><br/>") }}
+                                            {% endautoescape %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn  btn-secondary" data-dismiss="modal">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <dd class="col-sm-8"><a href="#!" data-toggle="modal" data-target="#stock-desc">Show
+                                Desc</a></dd>
+                            <dd id="collapseOne" class="col-sm-12 collapse" aria-labelledby="headingOne"
+                                data-parent="#accordionExample" style="">
+                                {{ data.yahoo.longBusinessSummary | truncate }}
+                            </dd>
+                            <dt class="col-sm-4">Sector</dt>
+                            <dd class="col-sm-8">{{ data.yahoo.sector }}</dd>
+                            <dt class="col-sm-4">Industry</dt>
+                            <dd class="col-sm-8">{{ data.yahoo.industry }}</dd>
+                            <dt class="col-sm-4">Exchange</dt>
+                            <dd class="col-sm-8">{{ data.yahoo.exchange }}</dd>
+                            <dt class="col-sm-4">Currency</dt>
+                            <dd class="col-sm-8">{{ data.yahoo.currency }}</dd>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+</div>
+<!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<!-- Apex Chart -->
+<script src="/static/assets/js/plugins/apexcharts.min.js"></script>
+<!-- custom-chart js -->
+<script src="/static/assets/js/pages/dashboard-main.js"></script>
+
+{% endblock javascripts %}

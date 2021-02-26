@@ -1,0 +1,388 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <!-- <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Dashboard Analytics</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="#!">Dashboard Analytics</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <!-- Customer overview start -->
+            <div class="col-lg-12">
+                <div class="card table-card">
+                    <div class="card-header">
+                        <h5>Search results for "{{ data.query }}"</h5>
+                        <ul class="nav nav-pills nav-fill mt-3 border-bottom pb-3" id="pills-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="pills-all-tab" data-toggle="pill" href="#pills-all"
+                                   role="tab" aria-controls="pills-all" aria-selected="true"><i
+                                        class="fas fa-search m-r-5"></i> All Results ({{ data.count }})</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-stock-tab" data-toggle="pill" href="#pills-stock"
+                                   role="tab" aria-controls="pills-stock" aria-selected="false"><i
+                                        class="fas fa-landmark m-r-5"></i> Stocks
+                                    ({{ data.result | selectattr('type', 'equalto', 'Stocks') | list | length }})</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-fund-tab" data-toggle="pill" href="#pills-fund"
+                                   role="tab" aria-controls="pills-fund" aria-selected="false"><i
+                                        class="fas fa-users m-r-5"></i> Mutual Funds
+                                    ({{ data.result | selectattr('type', 'equalto', 'Mutual Fund') | list | length }})</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-currencies-tab" data-toggle="pill" href="#pills-currencies" role="tab"
+                                   aria-controls="pills-currencies" aria-selected="false"><i
+                                        class="fas fa-money-bill-wave m-r-5"></i> Currencies
+                                ({{ data.result | selectattr('type', 'equalto', 'Currency') | list | length }})</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-crypto-tab" data-toggle="pill" href="#pills-crypto" role="tab"
+                                   aria-controls="pills-crypto" aria-selected="false"><i
+                                        class="fab fa-btc m-r-5"></i> Crypto
+                                ({{ data.result | selectattr('type', 'equalto', 'CRYPTOCURRENCY') | list | length }})</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-all" role="tabpanel"
+                                 aria-labelledby="pills-all-tab">
+                                <div class="table-responsive">
+                                    <div class="result-scroll ps ps--active-x ps--active-y"
+                                         style="height:420px;position:relative;">
+                                        <table class="table table-hover m-b-0">
+                                            <thead>
+                                            <tr>
+                                                <th><span>Type</span></th>
+                                                <th><span>Name</span></th>
+                                                <th><span>Symbol</span></th>
+                                                <th><span>Industry</span></th>
+                                                <th><span>Exchange</span></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            {% for result in data.result %}
+                                            <tr>
+                                                <td>
+                                                    <a class="help" data-toggle="tooltip" title=""
+                                                       data-content="And here's some amazing content. It's very engaging. Right?"
+                                                       data-original-title="{{ result.type }}"
+                                                       data-placement="right"
+                                                       aria-describedby="popover453029">
+                                                        {% if result.type == 'Stocks' %}
+                                                        <i class="fas fa-landmark text-c-yellow"></i>
+                                                        {% elif result.type == 'CRYPTOCURRENCY' %}
+                                                        <i class="fab fa-btc text-c-yellow fa-2x"></i>
+                                                        {% elif result.type == 'Currency' %}
+                                                        <i class="fas fa-money-bill-wave text-c-yellow"></i>
+                                                        {% elif result.type == 'Mutual Fund' %}
+                                                        <i class="fas fa-users text-c-yellow"></i>
+                                                        {% endif %}
+
+                                                    </a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <a href="/stock/{{ result.symbol }}" class=text-c-green">{{
+                                                        result.name
+                                                        }}</a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.symbol }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.industry }}
+                                                </td>
+                                                 <td class="align-middle">
+                                                    {{ result.exchange }}
+                                                </td>
+
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="pills-stock" role="tabpanel"
+                                 aria-labelledby="pills-stock-tab">
+                                <div class="table-responsive">
+                                    <div class="result-scroll1 ps ps--active-x ps--active-y"
+                                         style="height:420px;position:relative;">
+                                        <table class="table table-hover m-b-0">
+                                            <thead>
+                                            <tr>
+                                                <th><span>Type</span></th>
+                                                <th><span>Name</span></th>
+                                                <th><span>Symbol</span></th>
+                                                <th><span>Industry</span></th>
+                                                <th><span>Exchange</span></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            {% for result in data.result | selectattr('type', 'equalto', 'Stocks') %}
+                                            <tr>
+                                                <td>
+                                                    <a class="help" data-toggle="tooltip" title=""
+                                                       data-content="And here's some amazing content. It's very engaging. Right?"
+                                                       data-original-title="{{ result.type }}"
+                                                       data-placement="right"
+                                                       aria-describedby="popover453029">
+                                                        {% if result.type == 'Stocks' %}
+                                                        <i class="fas fa-landmark text-c-yellow"></i>
+                                                        {% elif result.type == 'CRYPTOCURRENCY' %}
+                                                        <i class="fab fa-btc text-c-yellow"></i>
+                                                        {% elif result.type == 'Currency' %}
+                                                        <i class="fas fa-money-bill-wave text-c-yellow"></i>
+                                                        {% elif result.type == 'Mutual Fund' %}
+                                                        <i class="fas fa-users text-c-yellow"></i>
+                                                        {% endif %}
+
+                                                    </a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <a href="/stock/{{ result.symbol }}" class=text-c-green">{{
+                                                        result.name
+                                                        }}</a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.symbol }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.industry }}
+                                                </td>
+                                                 <td class="align-middle">
+                                                    {{ result.exchange }}
+                                                </td>
+
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="pills-fund" role="tabpanel"
+                                 aria-labelledby="pills-fund-tab">
+                                <div class="table-responsive">
+                                    <div class="result-scroll2 ps ps--active-x ps--active-y"
+                                         style="height:420px;position:relative;">
+                                        <table class="table table-hover m-b-0">
+                                            <thead>
+                                            <tr>
+                                                <th><span>Type</span></th>
+                                                <th><span>Name</span></th>
+                                                <th><span>Symbol</span></th>
+                                                <th><span>Industry</span></th>
+                                                <th><span>Exchange</span></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            {% for result in data.result | selectattr('type', 'equalto', 'Mutual Fund') %}
+                                            <tr>
+                                                <td>
+                                                    <a class="help" data-toggle="tooltip" title=""
+                                                       data-content="And here's some amazing content. It's very engaging. Right?"
+                                                       data-original-title="{{ result.type }}"
+                                                       data-placement="right"
+                                                       aria-describedby="popover453029">
+                                                        {% if result.type == 'Stocks' %}
+                                                        <i class="fas fa-landmark text-c-yellow"></i>
+                                                        {% elif result.type == 'CRYPTOCURRENCY' %}
+                                                        <i class="fab fa-btc text-c-yellow"></i>
+                                                        {% elif result.type == 'Currency' %}
+                                                        <i class="fas fa-money-bill-wave text-c-yellow"></i>
+                                                        {% elif result.type == 'Mutual Fund' %}
+                                                        <i class="fas fa-users text-c-yellow"></i>
+                                                        {% endif %}
+
+                                                    </a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <a href="/stock/{{ result.symbol }}" class=text-c-green">{{
+                                                        result.name
+                                                        }}</a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.symbol }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.industry }}
+                                                </td>
+                                                 <td class="align-middle">
+                                                    {{ result.exchange }}
+                                                </td>
+
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="pills-currencies" role="tabpanel"
+                                 aria-labelledby="pills-currencies-tab">
+                                <div class="table-responsive">
+                                    <div class="result-scroll3 ps ps--active-x ps--active-y"
+                                         style="height:420px;position:relative;">
+                                        <table class="table table-hover m-b-0">
+                                            <thead>
+                                            <tr>
+                                                <th><span>Type</span></th>
+                                                <th><span>Name</span></th>
+                                                <th><span>Symbol</span></th>
+                                                <th><span>Industry</span></th>
+                                                <th><span>Exchange</span></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            {% for result in data.result | selectattr('type', 'equalto', 'Currency') %}
+                                            <tr>
+                                                <td>
+                                                    <a class="help" data-toggle="tooltip" title=""
+                                                       data-content="And here's some amazing content. It's very engaging. Right?"
+                                                       data-original-title="{{ result.type }}"
+                                                       data-placement="right"
+                                                       aria-describedby="popover453029">
+                                                        {% if result.type == 'Stocks' %}
+                                                        <i class="fas fa-landmark text-c-yellow"></i>
+                                                        {% elif result.type == 'CRYPTOCURRENCY' %}
+                                                        <i class="fab fa-btc text-c-yellow"></i>
+                                                        {% elif result.type == 'Currency' %}
+                                                        <i class="fas fa-money-bill-wave text-c-yellow"></i>
+                                                        {% elif result.type == 'Mutual Fund' %}
+                                                        <i class="fas fa-users text-c-yellow"></i>
+                                                        {% endif %}
+
+                                                    </a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <a href="/stock/{{ result.symbol }}" class=text-c-green">{{
+                                                        result.name
+                                                        }}</a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.symbol }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.industry }}
+                                                </td>
+                                                 <td class="align-middle">
+                                                    {{ result.exchange }}
+                                                </td>
+
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="pills-crypto" role="tabpanel"
+                                 aria-labelledby="pills-crypto-tab">
+                                <div class="table-responsive">
+                                    <div class="result-scroll4 ps ps--active-x ps--active-y"
+                                         style="height:420px;position:relative;">
+                                        <table class="table table-hover m-b-0">
+                                            <thead>
+                                            <tr>
+                                                <th><span>Type</span></th>
+                                                <th><span>Name</span></th>
+                                                <th><span>Symbol</span></th>
+                                                <th><span>Industry</span></th>
+                                                <th><span>Exchange</span></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            {% for result in data.result | selectattr('type', 'equalto', 'CRYPTOCURRENCY') %}
+                                            <tr>
+                                                <td>
+                                                    <a class="help" data-toggle="tooltip" title=""
+                                                       data-content="And here's some amazing content. It's very engaging. Right?"
+                                                       data-original-title="{{ result.type }}"
+                                                       data-placement="right"
+                                                       aria-describedby="popover453029">
+                                                        {% if result.type == 'Stocks' %}
+                                                        <i class="fas fa-landmark text-c-yellow"></i>
+                                                        {% elif result.type == 'CRYPTOCURRENCY' %}
+                                                        <i class="fab fa-btc text-c-yellow"></i>
+                                                        {% elif result.type == 'Currency' %}
+                                                        <i class="fas fa-money-bill-wave text-c-yellow"></i>
+                                                        {% elif result.type == 'Mutual Fund' %}
+                                                        <i class="fas fa-users text-c-yellow"></i>
+                                                        {% endif %}
+
+                                                    </a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <a href="/stock/{{ result.symbol }}" class=text-c-green">{{
+                                                        result.name
+                                                        }}</a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.symbol }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ result.industry }}
+                                                </td>
+                                                 <td class="align-middle">
+                                                    {{ result.exchange }}
+                                                </td>
+
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Customer overview end -->
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+</div>
+<!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<!-- Apex Chart -->
+<script src="/static/assets/js/plugins/apexcharts.min.js"></script>
+<!-- custom-chart js -->
+<script src="/static/assets/js/pages/search_result.js"></script>
+
+{% endblock javascripts %}
