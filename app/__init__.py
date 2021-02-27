@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask import Flask, url_for
+from flask_admin import Admin
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
@@ -34,6 +35,7 @@ def configure_database(app):
 
 def create_app(config):
     app = Flask(__name__, static_folder='base/static')
+    app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
     app.config.from_object(config)
     register_extensions(app)
     register_blueprints(app)

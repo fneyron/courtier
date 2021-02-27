@@ -26,19 +26,26 @@ def stock(ticker):
     # timeframe = [10*365, 5*365, 365]
 
     # Yahoo Data
+
     yahoo = yf.Ticker(ticker)
     df = yf.download(ticker, period='10y').reset_index()
-    print(df.head())
+    index = util.get_quandl('BCB/UDJIAD1').reset_index()
+    index = util.get_df_history(index, 10*365)
+    print(index.head())
+    print('quandl finished')
+    #df = util.merge_df(df, index, 'Date')
+
     #df = yahoo.history(period='max').reset_index()
     #print(df.head())
-    # multitick = {
-    #     'date': pd.to_datetime(df['Date']).tolist(),
-    #     'close': list(df['Close']),
-    #     'volume': list(df['Volume']),
-    # }
+    multitick = {
+        'date': pd.to_datetime(df['Date']).tolist(),
+        'close': list(df['Close']),
+        'volume': list(df['Volume']),
+    }
     tick = [[x['Date'], x['Close']] for x in json.loads(df.to_json(orient='records'))]
+    vol = [[x['Date'], x['Volume']] for x in json.loads(df.to_json(orient='records'))]
+    index = [[x['Date'], x['Value']] for x in json.loads(index.to_json(orient='records'))]
 
-    # tick = [(tf, util.get_df_history(df, tf)) for tf in timeframe]
 
     # PyTrends Data
     pytrend = util.get_pytrends_data(yahoo.info['shortName'].split(' ')[0])
@@ -54,7 +61,9 @@ def stock(ticker):
         'iex': iex,
         'pytrend': pytrend,
         'tick': tick,
-        # 'multi': multitick,
+        'volume': vol,
+        'multi': multitick,
+        'index': index,
     }
     return render_template('stock.html', segment=['stock', data['yahoo']['shortName']], data=data)
 

@@ -38,6 +38,22 @@ TICK_SEP = {
     'iex': '-',
 }
 
+EXCH_INDEX= {
+    'NMS': ['^GSPC', '^DJI'],
+}
+
+def get_index(exchange):
+    return EXCH_INDEX[exchange]
+
+
+def merge_df(df1, df2, col):
+    df: pd.DataFrame() = pd.merge(df1, df2, how='outer', on=col)
+    print(df.head, file=sys.stderr)
+    return df
+
+
+def get_quandl(key):
+    return quandl.get(key)
 
 def get_df_history(df, days=365, dt='Date'):
     df = df.reset_index()
@@ -46,7 +62,7 @@ def get_df_history(df, days=365, dt='Date'):
     if days > 365: df.groupby(pd.Grouper(freq='1W', key=dt)).mean()
     df = df.loc[df[dt] > date]
 
-    return df.to_json(orient='records')
+    return df
 
 
 def get_currency_symbol(currency_code):

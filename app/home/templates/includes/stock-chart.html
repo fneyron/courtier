@@ -5,144 +5,188 @@ $(document).ready(function() {
     setTimeout(function() {
         $(function() {
             var options = {
-                annotations: {
-                    yaxis: [{
-                        y: {{ data.yahoo.twoHundredDayAverage }},
-                        borderColor: '#999',
-                        forceNiceScale: true,
-                        label: {
-                            show: true,
-                            text: '200 Days Av.',
-                            align: 'left',
-                            style: {
-                                color: "#fff",
-                                background: '#00E396'
-                            }
+                  series: [{
+                      name: '{{ data.yahoo.symbol }}',
+                      type: 'area',
+                      data: {{ data.tick }}
+                  },{
+                      name: 'Index',
+                      type: 'line',
+                      data: {{ data.index }}
+                  }],
+                  chart: {
+                  id: 'stock-main-chart',
+                  type: 'area',
+                  height: 320,
+                  zoom: {
+                    autoScaleYaxis: true
+                  }
+            },
+            annotations: {
+                yaxis: [{
+                    y: {{ data.yahoo.twoHundredDayAverage }},
+                    borderColor: '#999',
+                    forceNiceScale: true,
+                    label: {
+                        show: true,
+                        text: '200 Days Av.',
+                        align: 'left',
+                        style: {
+                            color: "#fff",
+                            background: '#00E396'
                         }
-                    },
-                    {
-                        y: {{ data.yahoo.fiftyDayAverage }},
-                        borderColor: '#999',
-                        label: {
-                            show: true,
-                            align: 'left',
-                            text: '50 Days Av.',
-                            style: {
-                                color: "#fff",
-                                background: '#00E396'
-                            }
-                        }
-                    }],
-                },
-                chart: {
-                    type: 'area',
-                    height: 320,
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                series: [{
-                        name: "Value",
-                        data: {{ data.tick }}
-                    },
-
-                ],
-                markers: {
-                    size: 0,
-                    style: 'hollow',
-                },
-                colors: ["#4099ff"],
-                xaxis: {
-
-                    type: 'datetime',
-                    min: function() {
-                        var date = new Date();
-                        return date.setMonth(date.getMonth() - 12);
-                        },
-                    tickAmount: 6,
-                },
-                yaxis: {
-                    decimalsInFloat: 2,
-                },
-                tooltip: {
-                    x: {
-                        format: 'dd MMM yyyy'
                     }
                 },
-                fill: {
-                    type: 'gradient',
-                    gradient: {
+                {
+                    y: {{ data.yahoo.fiftyDayAverage }},
+                    borderColor: '#999',
+                    label: {
+                        show: true,
+                        align: 'left',
+                        text: '50 Days Av.',
+                        style: {
+                            color: "#fff",
+                            background: '#00E396'
+                        }
+                    }
+                }],
+            },
+            dataLabels: {
+                enabled: false
+            },
+            markers: {
+                size: 0,
+                style: 'hollow',
+            },
+            xaxis: {
+                type: 'datetime',
+                min: new Date().setMonth(new Date().getMonth() - 12),
+                tickAmount: 6,
+            },
+            yaxis: [{
+                decimalsInFloat: 2,
+                axisTicks: {
+                  show: false,
+                },
+                axisBorder: {
+                  show: false,
+                  color: '#008FFB'
+                },
+                labels: {
+                  style: {
+                    colors: '#008FFB',
+                  }
+                },
+                title: {
+                  text: "",
+                  style: {
+                    color: '#008FFB',
+                  }
+                },
+                tooltip: {
+                  enabled: true
+                }
+              },
+              {
+                seriesName: 'Income',
+                opposite: true,
+                decimalsInFloat: 0,
+                axisTicks: {
+                  show: false,
+                },
+                axisBorder: {
+                  show: false,
+                  color: '#00E396'
+                },
+                labels: {
+                  style: {
+                    colors: '#00E396',
+                  }
+                },
+                title: {
+                  text: "",
+                  style: {
+                    color: '#00E396',
+                  }
+                },
+              }],
+            tooltip: {
+                  x: {
+                        format: 'dd MMM yyyy'
+                  }
+            },
+            fill: {
+                  type: 'gradient',
+                  gradient: {
                         shadeIntensity: 1,
                         opacityFrom: 0.7,
                         opacityTo: 0.9,
                         stops: [0, 100]
-                    }
-                },
+                  }
+            },
+            };
 
-            }
-            var chart = new ApexCharts(
-                document.querySelector("#stock-main-chart"),
-                options
-            );
+            var chart = new ApexCharts(document.querySelector("#stock-main-chart"), options);
             chart.render();
+
+
             var resetCssClasses = function(activeEl) {
-                var els = document.querySelectorAll("button");
+                var els = document.querySelectorAll('button')
                 Array.prototype.forEach.call(els, function(el) {
-                    el.classList.remove('active');
-                });
+                    el.classList.remove('active')
+                })
 
                 activeEl.target.classList.add('active')
             }
-            document.querySelector("#one_month").addEventListener('click', function(e) {
-                var date = new Date();
+
+            document
+            .querySelector('#one_month')
+            .addEventListener('click', function(e) {
                 resetCssClasses(e)
-                chart.updateOptions({
-                    xaxis: {
-                        min: date.setMonth(date.getMonth() - 1),
-                        max: undefined,
-                    },
-                })
+                chart.zoomX(
+                    new Date().setMonth(new Date().getMonth() - 1),
+                    undefined
+                )
             })
-            document.querySelector("#six_months").addEventListener('click', function(e) {
-                var date = new Date();
+
+            document
+            .querySelector('#six_months')
+            .addEventListener('click', function(e) {
                 resetCssClasses(e)
-                chart.updateOptions({
-                    xaxis: {
-                        min: date.setMonth(date.getMonth() - 6),
-                        max: undefined,
-                    }
-                })
+                chart.zoomX(
+                    new Date().setMonth(new Date().getMonth() - 6),
+                    undefined
+                )
             })
-            document.querySelector("#one_year").addEventListener('click', function(e) {
-                var date = new Date();
+
+            document
+            .querySelector('#one_year')
+            .addEventListener('click', function(e) {
                 resetCssClasses(e)
-                chart.updateOptions({
-                    xaxis: {
-                        min: date.setMonth(date.getMonth() - 12),
-                        max: undefined,
-                    }
-                })
+                chart.zoomX(
+                    new Date().setMonth(new Date().getMonth() - 12),
+                    undefined
+                )
             })
-            document.querySelector("#ytd").addEventListener('click', function(e) {
-                resetCssClasses(e)
-                chart.updateOptions({
-                    xaxis: {
-                        min: new Date(new Date().getFullYear(), 0, 1).getTime(),
-                        max: undefined,
-                    }
-                })
+
+            document.querySelector('#ytd').addEventListener('click', function(e) {
+            resetCssClasses(e)
+            chart.zoomX(
+                new Date(new Date().getFullYear(), 0, 1).getTime(),
+                undefined
+            )
             })
-            document.querySelector("#all").addEventListener('click', function(e) {
+
+            document.querySelector('#all').addEventListener('click', function(e) {
                 resetCssClasses(e)
-                chart.updateOptions({
-                    xaxis: {
-                        min: undefined,
-                        max: undefined,
-                    }
-                })
+                chart.zoomX(
+                    undefined,
+                    undefined
+                )
             })
         });
     }, 700);
 });
+
 
 </script>
