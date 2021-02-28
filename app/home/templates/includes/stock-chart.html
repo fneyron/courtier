@@ -56,7 +56,7 @@ $(document).ready(function() {
             },
             xaxis: {
                 type: 'datetime',
-                min: new Date().setMonth(new Date().getMonth() - 12),
+                min: undefined,
                 tickAmount: 6,
             },
             yaxis: {
@@ -78,8 +78,8 @@ $(document).ready(function() {
             },
             };
 
-            var chart = new ApexCharts(document.querySelector("#stock-main-chart"), options);
-            chart.render();
+            var stock_chart = new ApexCharts(document.querySelector("#stock-main-chart"), options);
+            stock_chart.render();
 
 
             var resetCssClasses = function(activeEl) {
@@ -95,7 +95,7 @@ $(document).ready(function() {
             .querySelector('#one_month')
             .addEventListener('click', function(e) {
                 resetCssClasses(e)
-                chart.zoomX(
+                stock_chart.zoomX(
                     new Date().setMonth(new Date().getMonth() - 1),
                     undefined
                 )
@@ -105,7 +105,7 @@ $(document).ready(function() {
             .querySelector('#six_months')
             .addEventListener('click', function(e) {
                 resetCssClasses(e)
-                chart.zoomX(
+                stock_chart.zoomX(
                     new Date().setMonth(new Date().getMonth() - 6),
                     undefined
                 )
@@ -115,23 +115,23 @@ $(document).ready(function() {
             .querySelector('#one_year')
             .addEventListener('click', function(e) {
                 resetCssClasses(e)
-                chart.zoomX(
+                stock_chart.zoomX(
                     new Date().setMonth(new Date().getMonth() - 12),
                     undefined
                 )
             })
 
             document.querySelector('#ytd').addEventListener('click', function(e) {
-            resetCssClasses(e)
-            chart.zoomX(
-                new Date(new Date().getFullYear(), 0, 1).getTime(),
-                undefined
-            )
+                resetCssClasses(e)
+                stock_chart.zoomX(
+                    new Date(new Date().getFullYear(), 0, 1).getTime(),
+                    undefined
+                )
             })
 
             document.querySelector('#all').addEventListener('click', function(e) {
                 resetCssClasses(e)
-                chart.zoomX(
+                stock_chart.zoomX(
                     undefined,
                     undefined
                 )

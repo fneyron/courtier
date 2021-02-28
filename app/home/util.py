@@ -103,28 +103,22 @@ def get_series_math(df):
     last = df.iloc[-1]
 
     datas = {
-        'mean': mean,
-        'min': min,
-        'max': max,
-        'previous': previous,
-        'last': last
+        'mean': float(mean),
+        'min': float(min),
+        'max': float(max),
+        'previous': float(previous),
+        'last': float(last)
     }
     return datas
 
 
 def get_pytrends_data(string):
     pytrends = TrendReq(hl='en-US', tz=360)
-    query = string.split(' ')[0]
-    #print(query, file=sys.stderr)
-    kw_list = [query]
+    kw_list = [string]
     pytrends.build_payload(kw_list, cat=7, timeframe='today 12-m', geo='', gprop='')
     df = pytrends.interest_over_time().reset_index()
-    df.columns = ['Date', 'Value', 'Complete']
 
-    data = get_series_math(df['Value'])
-    data['df'] = df.to_json(orient='records')
-
-    return data
+    return df
 
 
 def convert_ticker(src, dst, symbol):

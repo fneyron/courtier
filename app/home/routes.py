@@ -5,7 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 from pandas import DataFrame
 
 from app.home import blueprint
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, jsonify, make_response
 from flask_login import login_required, current_user
 from app import login_manager
 from yahoofinancials import YahooFinancials
@@ -20,6 +20,18 @@ import json
 import sys
 import yfinance as yf
 
+@blueprint.route('/api/pytrend', methods=['POST', 'GET'])
+@login_required
+def api_pytrend():
+    terms = request.args.get('terms')
+    terms = terms.split(' ')
+    df = util.get_pytrends_data(terms[0])
+    data = util.get_series_math(df[terms[0]])
+    data['point'] = [[x['date'], x[terms[0]]] for x in json.loads(df.to_json(orient='records'))]
+    print(data)
+
+    return make_response(jsonify(data), 200)
+
 @blueprint.route('/api/financials', methods=['POST', 'GET'])
 @login_required
 def api_financials():
@@ -33,8 +45,7 @@ def api_financials():
     financials = YahooFinancials(symbol)
     data = financials.get_financial_stmts('annual', type)[data[type]][symbol]
 
-    print(data)
-    return json.dumps(data)
+    return make_response(json.dumps(data), 200)
 
 
 @blueprint.route('/stock/<ticker>')
@@ -86,7 +97,6 @@ def stock(ticker):
     # IEX Data
     iex_tick = util.convert_ticker('yahoo', 'iex', ticker)
     iex = util.get_iex_ticker(iex_tick)
-    print('iex finished')
 
     data = {
         'yahoo': yahoo.info,
