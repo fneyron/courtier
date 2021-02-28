@@ -60,14 +60,6 @@ def stock(ticker):
     df = yahoo.history(period='10y').reset_index()
     #print(yahoo.financials.head)
 
-    #fin = YahooFinancials(ticker)
-    #print(fin.get_financial_stmts('annual', 'income')['incomeStatementHistory'][ticker])
-    # financial = {
-    #     'income': fin.get_financial_stmts('annual', 'income')['incomeStatementHistory'][ticker],
-    #     'balance': fin.get_financial_stmts('annual', 'balance')['balanceSheetHistory'][ticker],
-    #     'cash': fin.get_financial_stmts('annual', 'cash')['cashflowStatementHistory'][ticker],
-    # }
-    # print('yahoo financials finished')
     #index = util.get_index(yahoo['exchange'])
     #tickers = ticker + ' ' + ' '.join(index)
     #df = yf.download(tickers, period='10y').reset_index()
@@ -106,7 +98,7 @@ def stock(ticker):
         'tick': tick,
         #'volume': vol,
         #'multi': multitick,
-        'index': index,
+        #'index': index,
     }
     return render_template('stock.html', segment=['stock', data['yahoo']['shortName']], data=data)
 

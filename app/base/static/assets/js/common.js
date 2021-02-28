@@ -52,7 +52,11 @@ function show_pytrend(data, id){
                 label: {
                     show: true,
                     text: 'Average',
-                    align: 'left',
+                    align: 'right',
+                    position: 'right',
+                    offsetX: -5,
+                    borderWidth: 0,
+                    borderRadius: 0,
                     style: {
                         color: "#fff",
                         background: '#00E396'
