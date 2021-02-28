@@ -8,6 +8,7 @@ from app.home import blueprint
 from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 from app import login_manager
+from yahoofinancials import YahooFinancials
 from jinja2 import TemplateNotFound
 from app.home.filters import *
 import app.home.util as util
@@ -19,37 +20,68 @@ import json
 import sys
 import yfinance as yf
 
+@blueprint.route('/api/financials', methods=['POST', 'GET'])
+@login_required
+def api_financials():
+    symbol = request.args.get('symbol')
+    type = request.args.get('type')
+    data = {
+        'income': 'incomeStatementHistory',
+        'balance': 'balanceSheetHistory',
+        'cash': 'cashflowStatementHistory',
+    }
+    financials = YahooFinancials(symbol)
+    data = financials.get_financial_stmts('annual', type)[data[type]][symbol]
+
+    print(data)
+    return json.dumps(data)
+
 
 @blueprint.route('/stock/<ticker>')
 @login_required
 def stock(ticker):
+
     # timeframe = [10*365, 5*365, 365]
 
     # Yahoo Data
-
     yahoo = yf.Ticker(ticker)
-    df = yf.download(ticker, period='10y').reset_index()
-    index = util.get_quandl('BCB/UDJIAD1').reset_index()
-    index = util.get_df_history(index, 10*365)
-    print(index.head())
-    print('quandl finished')
+    #print(yahoo.financials)
+    df = yahoo.history(period='10y').reset_index()
+    #print(yahoo.financials.head)
+
+    #fin = YahooFinancials(ticker)
+    #print(fin.get_financial_stmts('annual', 'income')['incomeStatementHistory'][ticker])
+    # financial = {
+    #     'income': fin.get_financial_stmts('annual', 'income')['incomeStatementHistory'][ticker],
+    #     'balance': fin.get_financial_stmts('annual', 'balance')['balanceSheetHistory'][ticker],
+    #     'cash': fin.get_financial_stmts('annual', 'cash')['cashflowStatementHistory'][ticker],
+    # }
+    # print('yahoo financials finished')
+    #index = util.get_index(yahoo['exchange'])
+    #tickers = ticker + ' ' + ' '.join(index)
+    #df = yf.download(tickers, period='10y').reset_index()
+    #index = util.get_quandl('BCB/UDJIAD1').reset_index()
+    #index = util.get_df_history(index, 10*365)
+
+    #print('quandl finished')
     #df = util.merge_df(df, index, 'Date')
 
     #df = yahoo.history(period='max').reset_index()
     #print(df.head())
-    multitick = {
-        'date': pd.to_datetime(df['Date']).tolist(),
-        'close': list(df['Close']),
-        'volume': list(df['Volume']),
-    }
+    # multitick = {
+    #     'date': pd.to_datetime(df['Date']).tolist(),
+    #     'close': list(df['Close']),
+    #     'volume': list(df['Volume']),
+    # }
+    #print(json.loads(df.to_json(orient='records')))
     tick = [[x['Date'], x['Close']] for x in json.loads(df.to_json(orient='records'))]
-    vol = [[x['Date'], x['Volume']] for x in json.loads(df.to_json(orient='records'))]
-    index = [[x['Date'], x['Value']] for x in json.loads(index.to_json(orient='records'))]
+    # vol = [[x['Date'], x['Volume']] for x in json.loads(df.to_json(orient='records'))]
+    #index = [[x['Date'], x[index[0]]['Value']] for x in json.loads(df.to_json(orient='records'))]
 
 
     # PyTrends Data
-    pytrend = util.get_pytrends_data(yahoo.info['shortName'].split(' ')[0])
-    print('pytrend finished')
+    #pytrend = util.get_pytrends_data(yahoo.info['shortName'].split(' ')[0])
+    #print('pytrend finished')
 
     # IEX Data
     iex_tick = util.convert_ticker('yahoo', 'iex', ticker)
@@ -58,11 +90,12 @@ def stock(ticker):
 
     data = {
         'yahoo': yahoo.info,
+        #'financial': financial,
         'iex': iex,
-        'pytrend': pytrend,
+        #'pytrend': pytrend,
         'tick': tick,
-        'volume': vol,
-        'multi': multitick,
+        #'volume': vol,
+        #'multi': multitick,
         'index': index,
     }
     return render_template('stock.html', segment=['stock', data['yahoo']['shortName']], data=data)

@@ -9,10 +9,6 @@ $(document).ready(function() {
                       name: '{{ data.yahoo.symbol }}',
                       type: 'area',
                       data: {{ data.tick }}
-                  },{
-                      name: 'Index',
-                      type: 'line',
-                      data: {{ data.index }}
                   }],
                   chart: {
                   id: 'stock-main-chart',
@@ -63,53 +59,9 @@ $(document).ready(function() {
                 min: new Date().setMonth(new Date().getMonth() - 12),
                 tickAmount: 6,
             },
-            yaxis: [{
+            yaxis: {
                 decimalsInFloat: 2,
-                axisTicks: {
-                  show: false,
-                },
-                axisBorder: {
-                  show: false,
-                  color: '#008FFB'
-                },
-                labels: {
-                  style: {
-                    colors: '#008FFB',
-                  }
-                },
-                title: {
-                  text: "",
-                  style: {
-                    color: '#008FFB',
-                  }
-                },
-                tooltip: {
-                  enabled: true
-                }
-              },
-              {
-                seriesName: 'Income',
-                opposite: true,
-                decimalsInFloat: 0,
-                axisTicks: {
-                  show: false,
-                },
-                axisBorder: {
-                  show: false,
-                  color: '#00E396'
-                },
-                labels: {
-                  style: {
-                    colors: '#00E396',
-                  }
-                },
-                title: {
-                  text: "",
-                  style: {
-                    color: '#00E396',
-                  }
-                },
-              }],
+            },
             tooltip: {
                   x: {
                         format: 'dd MMM yyyy'

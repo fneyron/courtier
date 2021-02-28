@@ -5,6 +5,7 @@ import json
 import sys
 import pandas as pd
 import yfinance as yf
+from yahoofinancials import YahooFinancials
 import datetime
 from currency_symbols import CurrencySymbols
 from pytrends.request import TrendReq
@@ -40,6 +41,8 @@ TICK_SEP = {
 
 EXCH_INDEX= {
     'NMS': ['^GSPC', '^DJI'],
+    'NYQ': ['^GSPC', '^DJI'],
+    'PAR': ['^FCHI'],
 }
 
 def get_index(exchange):
