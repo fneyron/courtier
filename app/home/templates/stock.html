@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Dashboard {% endblock %}
+{% block title %} Stock {% endblock %}
 
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -1225,26 +1225,93 @@
 {% block javascripts %}
 
 
-<!-- Apex Chart -->
-<script src="/static/assets/js/plugins/apexcharts.min.js"></script>
-{% include 'includes/stock-chart.html' %}
 <!-- custom js -->
 <script src="/static/assets/js/pages/stock.js"></script>
 <script>
+'use strict';
 $(document).ready(function() {
     fetch('/api/financials?symbol={{ data.yahoo.symbol }}&type=income').then((response) => {
         response.json().then((data) => show_financial(data, 'income'))
-    })
+    });
     fetch('/api/financials?symbol={{ data.yahoo.symbol }}&type=balance').then((response) => {
         response.json().then((data) => show_financial(data, 'balance'))
-    })
+    });
     fetch('/api/pytrend?terms={{ data.yahoo.shortName }}').then((response) => {
         response.json().then((data) => show_pytrend(data))
-    })
+    });
+
+    setTimeout(function() {
+
+        var options = apex_chart_options('stock-main-chart');
+        options.series.push({
+            name: '{{ data.yahoo.symbol }}',
+            type: 'area',
+            data: {{ data.tick }}
+        });
+        options.xaxis.tickAmount = 6;
+        options.chart.height = 320;
+        options.annotations.yaxis.push(apex_chart_annotate('y', {{ data.yahoo.twoHundredDayAverage }}, '200 Days Av.'))
+        options.annotations.yaxis.push(apex_chart_annotate('y', {{ data.yahoo.fiftyDayAverage }}, '50 Days Av.'))
+        options.chart.group = 'stock';
+        var stock_chart = new ApexCharts(document.querySelector("#stock-main-chart"), options);
+        stock_chart.render();
+
+
+        var resetCssClasses = function(activeEl) {
+            var els = document.querySelectorAll('button')
+            Array.prototype.forEach.call(els, function(el) {
+                el.classList.remove('active')
+            })
+
+            activeEl.target.classList.add('active')
+        }
+
+        document
+        .querySelector('#one_month')
+        .addEventListener('click', function(e) {
+            resetCssClasses(e)
+            stock_chart.zoomX(
+                new Date().setMonth(new Date().getMonth() - 1),
+                undefined
+            )
+        })
+
+        document
+        .querySelector('#six_months')
+        .addEventListener('click', function(e) {
+            resetCssClasses(e)
+            stock_chart.zoomX(
+                new Date().setMonth(new Date().getMonth() - 6),
+                undefined
+            )
+        })
+
+        document
+        .querySelector('#one_year')
+        .addEventListener('click', function(e) {
+            resetCssClasses(e)
+            stock_chart.zoomX(
+                new Date().setMonth(new Date().getMonth() - 12),
+                undefined
+            )
+        })
+
+        document.querySelector('#ytd').addEventListener('click', function(e) {
+            resetCssClasses(e)
+            stock_chart.zoomX(
+                new Date(new Date().getFullYear(), 0, 1).getTime(),
+                undefined
+            )
+        })
+
+        document.querySelector('#all').addEventListener('click', function(e) {
+            resetCssClasses(e)
+            stock_chart.zoomX(
+                undefined,
+                undefined
+            )
+        })
+    }, 700);
 });
-
-
 </script>
-
-
 {% endblock javascripts %}

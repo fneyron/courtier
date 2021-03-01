@@ -10,9 +10,11 @@ import datetime
 from currency_symbols import CurrencySymbols
 from pytrends.request import TrendReq
 import pyEX as p
+import io
 
-os.environ['HTTP_PROXY'] = ""
-os.environ['HTTPS_PROXY'] = ""
+
+os.environ['HTTP_PROXY'] = "http://172.16.99.9:3129"
+os.environ['HTTPS_PROXY'] = "http://172.16.99.9:3129"
 
 quandl.ApiConfig.api_key = "2RieC3BYU62Z4Z-koxRX"
 IEX_API_KEY = "pk_67178ec015c04eae909c3308f69ebf09"
@@ -54,6 +56,18 @@ def merge_df(df1, df2, col):
     print(df.head, file=sys.stderr)
     return df
 
+def get_industry_info():
+    url = "https://finviz.com/grp_export.ashx?g=industry&v=110&o=pe"
+    payload = {}
+    headers = {
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    }
+    response = requests.request("GET", url, headers=headers, data=payload)
+    df = pd.read_csv(io.StringIO(response.content.decode('utf-8')), header=0, index_col=0)
+
+    return df
 
 def get_quandl(key):
     return quandl.get(key)
@@ -99,6 +113,8 @@ def get_series_math(df):
     mean = df.mean()
     min = df.min()
     max = df.max()
+    d50_average = df.tail(50).mean()
+    d200_average = df.tail(200).mean()
     previous = df.iloc[-2]
     last = df.iloc[-1]
 
@@ -107,7 +123,9 @@ def get_series_math(df):
         'min': float(min),
         'max': float(max),
         'previous': float(previous),
-        'last': float(last)
+        'last': float(last),
+        'd50_average': float(d50_average),
+        'd200_average': float(d200_average),
     }
     return datas
 

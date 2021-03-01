@@ -14,11 +14,43 @@ from app.home.filters import *
 import app.home.util as util
 import numpy as np
 import urllib
+import os
 import requests
 import pandas as pd
 import json
 import sys
 import yfinance as yf
+
+os.environ['HTTP_PROXY'] = "http://172.16.99.9:3129"
+os.environ['HTTPS_PROXY'] = "http://172.16.99.9:3129"
+
+@blueprint.route('/market/index')
+@login_required
+def market_index():
+    indexes = {
+        'America': {'S&P 500': '^GSPC', 'Dow Jones': '^DJI', 'Nasdaq': '^IXIC'},
+        'Europe': {'DAX': '^GDAXI'},
+        'Asia': {'Nikkei':'^N225'},
+    }
+
+    idx_values = [indexes[x][y] for x in indexes for y in indexes[x]]
+    #infos = yf.Tickers(' '. join(idx_values))
+    df: pd.DataFrame = yf.download(' '. join(idx_values), period='10y')
+    print(df)
+    datas = {}
+    for continent in indexes:
+        datas[continent] = {}
+        for label in indexes[continent]:
+            values = df.xs(indexes[continent][label], level=1, axis=1).reset_index()
+            values = values.dropna(how='any',axis=0)
+            datas[continent][label] = util.get_series_math(values['Close'])
+            history = [[x['Date'], x['Close']] for x in json.loads(values.to_json(orient='records'))]
+            datas[continent][label]['history'] = json.dumps(history)
+            print(history)
+
+    return render_template('market_index.html', segment=['market', 'index'], data=datas)
+
+
 
 @blueprint.route('/api/pytrend', methods=['POST', 'GET'])
 @login_required
@@ -59,6 +91,13 @@ def stock(ticker):
     #print(yahoo.financials)
     df = yahoo.history(period='10y').reset_index()
     #print(yahoo.financials.head)
+
+
+    # Finvizz Industry Perf
+    industry = util.get_industry_info()
+    print(df)
+
+
 
     #index = util.get_index(yahoo['exchange'])
     #tickers = ticker + ' ' + ' '.join(index)

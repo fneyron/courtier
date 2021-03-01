@@ -20,6 +20,81 @@ $(document).ready(function () {
       }
     });
 });
+
+function apex_chart_options(id){
+    var options = {
+        series: [],
+        annotations: {
+            yaxis: [],
+            xaxis: [],
+        },
+        chart: {
+            id: id,
+            type: 'area',
+            animations: {
+                enabled: false
+            },
+            zoom: {
+                autoScaleYaxis: true
+            }
+        },
+        markers: {
+            size: 0,
+            showNullDataPoints: false,
+        },
+        dataLabels: {
+            enabled: false
+        },
+        xaxis: {
+            type: 'datetime',
+        },
+        yaxis: {
+            decimalsInFloat: 2,
+        },
+        tooltip: {
+              x: {
+                    format: 'dd MMM yyyy'
+              }
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.9,
+                stops: [0, 100]
+            }
+        },
+
+    };
+    return options
+}
+
+function apex_chart_annotate(axis, value, label){
+    var annotation = {
+        borderColor: '#999',
+
+        opacity: 0.3,
+        forceNiceScale: true,
+        label: {
+            offsetX: 0,
+            show: true,
+            position: 'right',
+            text: label,
+            align: 'right',
+            borderWidth: 0,
+            borderRadius: 0,
+            style: {
+                color: "#fff",
+                background: '#00E396'
+            }
+        }
+    }
+    annotation[axis] = value
+    return annotation
+
+}
+
 function show_pytrend(data, id){
     var last = data['last'];
     var previous = data['previous'];
@@ -38,72 +113,17 @@ function show_pytrend(data, id){
     $('#gtrend').find('#change').append(change_html);
 
 
-    var options = {
-        series: [{
-          name: 'Value %',
-          type: 'area',
-          data: data['point']
-        }],
-        annotations: {
-            yaxis: [{
-                y: mean,
-                borderColor: '#999',
-                forceNiceScale: true,
-                label: {
-                    show: true,
-                    text: 'Average',
-                    align: 'right',
-                    position: 'right',
-                    offsetX: -5,
-                    borderWidth: 0,
-                    borderRadius: 0,
-                    style: {
-                        color: "#fff",
-                        background: '#00E396'
-                    }
-                }
-            }]
-        },
-        chart: {
-            id: 'pytrend-chart',
-            type: 'area',
-            zoom: {
-                autoScaleYaxis: true
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        markers: {
-            size: 0,
-            style: 'hollow',
-        },
-        xaxis: {
-            type: 'datetime',
-            min: new Date().setMonth(new Date().getMonth() - 12),
-            tickAmount: 6,
-        },
-        yaxis: {
-            decimalsInFloat: 2,
-            max: 100,
-            min: 0,
-            tickAmount: 5,
-        },
-        tooltip: {
-              x: {
-                    format: 'dd MMM yyyy'
-              }
-        },
-        fill: {
-              type: 'gradient',
-              gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.9,
-                    stops: [0, 100]
-              }
-        },
-    };
+    var options = apex_chart_options('pytrend_chart');
+    options.series.push({
+        name: 'Value %',
+        type: 'line',
+        data: data['point']});
+    options.yaxis.max=100;
+    options.chart.group = 'stock';
+    options.yaxis.min=0;
+    console.log(apex_chart_annotate('y', mean, 'Average'));
+    options.annotations.yaxis.push(apex_chart_annotate('y', mean, 'Average'));
+
     var pytrend_chart = new ApexCharts(document.querySelector("#pytrend-chart"), options);
     pytrend_chart.render();
 };

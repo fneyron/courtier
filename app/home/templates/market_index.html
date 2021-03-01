@@ -1,0 +1,100 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Market Index {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        {% include 'includes/breadcrumb.html' %}
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            {% for continent in data %}
+            {% set continentloop = loop %}
+            <div class="col-md-6 col-xl-4">
+                <h5>{{ continent }}</h5>
+                <hr>
+                {% for idx in data[continent] %}
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-auto"><h5 class="card-title mb-0">{{ idx }}</h5></div>
+                            <div class="col text-right">
+                                <h4 class="mb-0">
+                                    {{ "%.2f"|format(data[continent][idx].last) }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto">
+
+                            </div>
+                            <div class="col text-right">
+
+                                {% if data[continent][idx].last > data[continent][idx].previous %}
+                                <span class="text-c-green">
+                                    {{ "+%.2f" | format(((data[continent][idx].last - data[continent][idx].previous) / data[continent][idx].last)*100) }}%
+                                    <i class="feather icon-trending-up ml-1"></i>
+                                </span>
+                                {% else %}
+                                <span class="text-c-red">
+                                  {{ "-%.2f" | format(((data[continent][idx].last - data[continent][idx].previous) / data[continent][idx].last)*100) }}%
+                                    <i class="feather icon-trending-down ml-1"></i>
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div id="chart_{{ continentloop.index }}{{ loop.index }}"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+</div>
+<!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<!-- custom js -->
+<script>
+{% for continent in data %}
+{% set continentloop = loop %}
+{% for idx in data[continent] %}
+var options=apex_chart_options('chart_{{ continentloop.index }}{{ loop.index }}')
+options.series.push({
+    name: 'Value',
+    type: 'line',
+    data: {{ data[continent][idx].history }}
+});
+options.chart.group = 'index';
+options.annotations.yaxis.push(apex_chart_annotate('y', {{ data[continent][idx].d50_average }}, '50 Days Av.'))
+options.annotations.yaxis.push(apex_chart_annotate('y', {{ data[continent][idx].d200_average }}, '200 Days Av.'))
+var chart = new ApexCharts(document.querySelector("#chart_{{ continentloop.index }}{{ loop.index }}"), options);
+chart.render();
+{% endfor %}
+{% endfor %}
+chart.zoomX(
+    new Date().setMonth(new Date().getMonth() - 6),
+    undefined
+)
+
+
+
+
+</script>
+
+
+{% endblock javascripts %}

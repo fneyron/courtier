@@ -19,4 +19,4 @@ yfinance
 psycopg2
 pyEX
 currency_symbols
-pytrends
+git+git://github.com/GeneralMills/pytrends.git
