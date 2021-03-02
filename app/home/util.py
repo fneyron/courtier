@@ -131,7 +131,7 @@ def get_series_math(df):
 
 
 def get_pytrends_data(string):
-    pytrends = TrendReq(hl='fr-FR', tz=360, retries=2, backoff_factor=0.1, requests_args={'verify':False})
+    pytrends = TrendReq(hl='en-US', tz=360, retries=2, backoff_factor=0.1, requests_args={'verify':False},  timeout=(10,25))
     kw_list = [string]
     pytrends.build_payload(kw_list, cat=7, timeframe='today 12-m', geo='', gprop='')
     df = pytrends.interest_over_time().reset_index()
