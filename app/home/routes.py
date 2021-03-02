@@ -21,8 +21,8 @@ import json
 import sys
 import yfinance as yf
 
-os.environ['HTTP_PROXY'] = "http://172.16.99.9:3129"
-os.environ['HTTPS_PROXY'] = "http://172.16.99.9:3129"
+os.environ['HTTP_PROXY'] = ""
+os.environ['HTTPS_PROXY'] = ""
 
 @blueprint.route('/market/index')
 @login_required
