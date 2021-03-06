@@ -50,7 +50,16 @@ def market_index():
 
     return render_template('market_index.html', segment=['market', 'index'], data=datas)
 
+@blueprint.route('/api/industry', methods=['POST', 'GET'])
+@login_required
+def api_industry():
+    industry = request.args.get('name')
 
+    # Finvizz Industry Perf
+    df: pd.DataFrame = util.get_industry_info("https://finviz.com/grp_export.ashx?g=industry&v=150&o=name&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26")
+    data = json.loads(df.loc[df['Name'].isin([industry])].to_json(orient='records'))
+
+    return make_response(jsonify(data), 200)
 
 @blueprint.route('/api/pytrend', methods=['POST', 'GET'])
 @login_required
@@ -60,7 +69,6 @@ def api_pytrend():
     df = util.get_pytrends_data(terms[0])
     data = util.get_series_math(df[terms[0]])
     data['point'] = [[x['date'], x[terms[0]]] for x in json.loads(df.to_json(orient='records'))]
-    print(data)
 
     return make_response(jsonify(data), 200)
 
@@ -74,8 +82,14 @@ def api_financials():
         'balance': 'balanceSheetHistory',
         'cash': 'cashflowStatementHistory',
     }
-    financials = YahooFinancials(symbol)
-    data = financials.get_financial_stmts('annual', type)[data[type]][symbol]
+    try:
+        financials = YahooFinancials(symbol)
+        data = financials.get_financial_stmts('annual', type)[data[type]][symbol]
+        if type == 'income':
+            for x in data:
+                for y in x:
+                    x[y]['operatingExpenses'] = x[y]['grossProfit'] - x[y]['operatingIncome']
+    except: data = []
 
     return make_response(json.dumps(data), 200)
 
@@ -88,14 +102,13 @@ def stock(ticker):
 
     # Yahoo Data
     yahoo = yf.Ticker(ticker)
-    #print(yahoo.financials)
+    print(yahoo.info)
     df = yahoo.history(period='10y').reset_index()
+    tick = [[x['Date'], x['Close']] for x in json.loads(df.to_json(orient='records'))]
     #print(yahoo.financials.head)
 
 
-    # Finvizz Industry Perf
-    industry = util.get_industry_info()
-    print(df)
+
 
 
 
@@ -116,7 +129,7 @@ def stock(ticker):
     #     'volume': list(df['Volume']),
     # }
     #print(json.loads(df.to_json(orient='records')))
-    tick = [[x['Date'], x['Close']] for x in json.loads(df.to_json(orient='records'))]
+
     # vol = [[x['Date'], x['Volume']] for x in json.loads(df.to_json(orient='records'))]
     #index = [[x['Date'], x[index[0]]['Value']] for x in json.loads(df.to_json(orient='records'))]
 
@@ -135,6 +148,7 @@ def stock(ticker):
         'iex': iex,
         #'pytrend': pytrend,
         'tick': tick,
+        'math': util.get_series_math(df['Close'])
         #'volume': vol,
         #'multi': multitick,
         #'index': index,

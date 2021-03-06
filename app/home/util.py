@@ -56,8 +56,7 @@ def merge_df(df1, df2, col):
     print(df.head, file=sys.stderr)
     return df
 
-def get_industry_info():
-    url = "https://finviz.com/grp_export.ashx?g=industry&v=110&o=pe"
+def get_industry_info(url):
     payload = {}
     headers = {
         'Upgrade-Insecure-Requests': '1',
@@ -108,17 +107,32 @@ def get_iex_ticker(ticker):
 
     return data
 
+def sma(window, series: pd.Series):
+    return series.rolling(window=window).mean()
 
-def get_series_math(df):
+def mean_perf(days, series: pd.Series):
+    if len(series) > days:
+        return series.tail(days).pct_change().mean()
+    else: return series.pct_change().mean()
+
+def perf(days, series: pd.Series):
+    if len(series) > days:
+        return (series.iloc[-1] - series.iloc[-days]) * 100 / series.iloc[-days]
+    else: return (series.iloc[-1] - series.iloc[0]) * 100 / series.iloc[0]
+
+def get_series_math(df: pd.Series):
     mean = df.mean()
     min = df.min()
     max = df.max()
     d50_average = df.tail(50).mean()
     d200_average = df.tail(200).mean()
+    sma200 = sma(200, df)
+    perf200 = perf(200, df)
+    perf7 = perf(7, df)
     previous = df.iloc[-2]
     last = df.iloc[-1]
 
-    datas = {
+    data = {
         'mean': float(mean),
         'min': float(min),
         'max': float(max),
@@ -126,8 +140,10 @@ def get_series_math(df):
         'last': float(last),
         'd50_average': float(d50_average),
         'd200_average': float(d200_average),
+        'perf200': float(perf200),
+        'perf7': float(perf7)
     }
-    return datas
+    return data
 
 
 def get_pytrends_data(string):

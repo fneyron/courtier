@@ -106,7 +106,7 @@ function show_pytrend(data, id){
         + '% <i class="feather icon-trending-up ml-1"></i></span>'
     }
     else {
-        var change_html = '<span class="text-c-red">-' + parseFloat(change).toFixed(2)
+        var change_html = '<span class="text-c-red">' + parseFloat(change).toFixed(2)
         + '% <i class="feather icon-trending-down ml-1"></i></span>'
     }
     $('#gtrend').find('#last').append(last)

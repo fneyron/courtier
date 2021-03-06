@@ -45,7 +45,7 @@
                                 </span>
                                 {% else %}
                                 <span class="text-c-red">
-                                  {{ "-%.2f" | format(((data[continent][idx].last - data[continent][idx].previous) / data[continent][idx].last)*100) }}%
+                                  {{ "%.2f" | format(((data[continent][idx].last - data[continent][idx].previous) / data[continent][idx].last)*100) }}%
                                     <i class="feather icon-trending-down ml-1"></i>
                                 </span>
                                 {% endif %}
@@ -82,6 +82,7 @@ options.series.push({
 options.chart.group = 'index';
 options.annotations.yaxis.push(apex_chart_annotate('y', {{ data[continent][idx].d50_average }}, '50 Days Av.'))
 options.annotations.yaxis.push(apex_chart_annotate('y', {{ data[continent][idx].d200_average }}, '200 Days Av.'))
+options.tooltip.enabled = false;
 var chart = new ApexCharts(document.querySelector("#chart_{{ continentloop.index }}{{ loop.index }}"), options);
 chart.render();
 {% endfor %}
