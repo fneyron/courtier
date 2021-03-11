@@ -12,7 +12,6 @@ from pytrends.request import TrendReq
 import pyEX as p
 import io
 
-
 os.environ['HTTP_PROXY'] = ""
 os.environ['HTTPS_PROXY'] = ""
 
@@ -41,11 +40,12 @@ TICK_SEP = {
     'iex': '-',
 }
 
-EXCH_INDEX= {
+EXCH_INDEX = {
     'NMS': ['^GSPC', '^DJI'],
     'NYQ': ['^GSPC', '^DJI'],
     'PAR': ['^FCHI'],
 }
+
 
 def get_index(exchange):
     return EXCH_INDEX[exchange]
@@ -56,6 +56,7 @@ def merge_df(df1, df2, col):
     print(df.head, file=sys.stderr)
     return df
 
+
 def get_industry_info(url):
     payload = {}
     headers = {
@@ -64,17 +65,23 @@ def get_industry_info(url):
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
     }
     response = requests.request("GET", url, headers=headers, data=payload)
-    df = pd.read_csv(io.StringIO(response.content.decode('utf-8')), header=0, index_col=0)
+    col_name = ['no', 'name', 'mktcap', 'pe', 'forward_pe', 'peg', 'ps', 'pb', 'pc', 'price_to_free_cashflow',
+                'div_yield', 'eps_growth_last_5y', 'eps_growth_next_5y', 'sales_growth_past_5y', 'float_short',
+                'perf_7d', 'perf_1m', 'perf_3m', 'perf_6m', 'perf_1y', 'perf_ytd', 'analyst_reco', 'avg_vol',
+                'rel_vol', 'change', 'vol', 'stocks']
+    df = pd.read_csv(io.StringIO(response.content.decode('utf-8')), header=0, index_col=0, names=col_name)
 
     return df
+
 
 def get_quandl(key):
     return quandl.get(key)
 
+
 def get_df_history(df, days=365, dt='Date'):
     df = df.reset_index()
     date = datetime.datetime.now() - datetime.timedelta(days=days)
-    #print(df, file=sys.stderr)
+    # print(df, file=sys.stderr)
     if days > 365: df.groupby(pd.Grouper(freq='1W', key=dt)).mean()
     df = df.loc[df[dt] > date]
 
@@ -107,18 +114,30 @@ def get_iex_ticker(ticker):
 
     return data
 
+
 def sma(window, series: pd.Series):
     return series.rolling(window=window).mean()
+
+
+def get_df_indicator(df: pd.DataFrame, serie):
+    df['sma50'] = sma(50, df[serie])
+    df['sma200'] = sma(200, df[serie])
+    return df
+
 
 def mean_perf(days, series: pd.Series):
     if len(series) > days:
         return series.tail(days).pct_change().mean()
-    else: return series.pct_change().mean()
+    else:
+        return series.pct_change().mean()
+
 
 def perf(days, series: pd.Series):
     if len(series) > days:
         return (series.iloc[-1] - series.iloc[-days]) * 100 / series.iloc[-days]
-    else: return (series.iloc[-1] - series.iloc[0]) * 100 / series.iloc[0]
+    else:
+        return (series.iloc[-1] - series.iloc[0]) * 100 / series.iloc[0]
+
 
 def get_series_math(df: pd.Series):
     mean = df.mean()
@@ -147,7 +166,8 @@ def get_series_math(df: pd.Series):
 
 
 def get_pytrends_data(string):
-    pytrends = TrendReq(hl='en-US', tz=360, retries=2, backoff_factor=0.1, requests_args={'verify':False},  timeout=(10,25))
+    pytrends = TrendReq(hl='en-US', tz=360, retries=2, backoff_factor=0.1, requests_args={'verify': False},
+                        timeout=(10, 25))
     kw_list = [string]
     pytrends.build_payload(kw_list, cat=7, timeframe='today 12-m', geo='', gprop='')
     df = pytrends.interest_over_time().reset_index()

@@ -36,17 +36,21 @@ def market_index():
     idx_values = [indexes[x][y] for x in indexes for y in indexes[x]]
     #infos = yf.Tickers(' '. join(idx_values))
     df: pd.DataFrame = yf.download(' '. join(idx_values), period='10y')
-    print(df)
+    #print(df)
     datas = {}
     for continent in indexes:
         datas[continent] = {}
         for label in indexes[continent]:
             values = df.xs(indexes[continent][label], level=1, axis=1).reset_index()
-            values = values.dropna(how='any',axis=0)
+            values = values.dropna(how='any', axis=0)
+
             datas[continent][label] = util.get_series_math(values['Close'])
+            values['sma200'] = util.sma(200, values['Close'])
+            sma200 = [[x['Date'], x['sma200']] for x in json.loads(values.to_json(orient='records'))]
             history = [[x['Date'], x['Close']] for x in json.loads(values.to_json(orient='records'))]
+
             datas[continent][label]['history'] = json.dumps(history)
-            print(history)
+            datas[continent][label]['sma200'] = json.dumps(sma200)
 
     return render_template('market_index.html', segment=['market', 'index'], data=datas)
 
@@ -54,12 +58,14 @@ def market_index():
 @login_required
 def api_industry():
     industry = request.args.get('name')
-
+    print(industry)
     # Finvizz Industry Perf
     df: pd.DataFrame = util.get_industry_info("https://finviz.com/grp_export.ashx?g=industry&v=150&o=name&c=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26")
-    data = json.loads(df.loc[df['Name'].isin([industry])].to_json(orient='records'))
+    print(df)
+    data = json.loads(df.loc[df['name'].isin([industry])].to_json(orient='records'))
+    print(data)
 
-    return make_response(jsonify(data), 200)
+    return make_response(jsonify(data[0]), 200)
 
 @blueprint.route('/api/pytrend', methods=['POST', 'GET'])
 @login_required

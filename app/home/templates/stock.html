@@ -231,7 +231,7 @@
                             </div>-->
                             <div class="card-body">
                                 <div class="text-center m-t-30">
-                                    <img class="hei-100 mb-5 bg-white"
+                                    <img class="mh-100 mw-100 mb-5 bg-white"
                                          src="{{ data.yahoo.logo_url }}"/>
                                 </div>
                                 <dl class="dl-horizontal row">
@@ -287,13 +287,15 @@
                     <div class="col-md-6 col-xl-12">
                         <div class="card">
                             <div class="card-header pb-0">
-                                <h5 class="mb-1">Highlights</h5>
+                                <h5 class="mb-1">Industry Highlights</h5>
                             </div>
                             <div class="card-body">
                                 <div class="row pb-2">
                                     <span class="col-sm-6"></span>
                                     <span class="col-sm-3 text-center"><i class="feather icon-trending-up f-18"></i></span>
-                                    <span class="col-sm-3 text-center"><i class="fas fa-industry f-18"></i></span>
+                                    <span class="col-sm-3 text-center">
+                                        <i class="fas fa-industry f-18"></i>
+                                    </span>
                                 </div>
                                 <div class="row">
                                     <span class="col-sm-6">
@@ -304,14 +306,14 @@
                                        data-content="">
                                             <i class="feather icon-help-circle"></i></a>
                                     </span>
-                                    <span class="col-sm-3 text-center">
+                                    <span class="col-sm-3 text-center" id="stock-pe">
                                         {% if data.yahoo.trailingPE is defined %}
                                         {{ "%.2f" | format(data.yahoo.trailingPE) }}
                                         {% else %}
                                         N/A
                                         {% endif %}
                                     </span>
-                                    <span class="col-sm-3 text-center"></span>
+                                    <span class="col-sm-3 text-center" id="industry-pe" data-compare="stock-pe"></span>
                                 </div>
                                 <div class="row">
                                     <span class="col-sm-6">
@@ -322,20 +324,20 @@
                                        data-content="">
                                             <i class="feather icon-help-circle"></i></a>
                                     </span>
-                                    <span class="col-sm-3 text-center">{{ "%.2f" | format(data.yahoo.priceToBook) }}</span>
-                                    <span class="col-sm-3 text-center"></span>
+                                    <span class="col-sm-3 text-center" id="stock-pb">{{ "%.2f" | format(data.yahoo.priceToBook) }}</span>
+                                    <span class="col-sm-3 text-center" id="industry-pb" data-compare="stock-pb"></span>
                                 </div>
                                 <div class="row">
                                     <span class="col-sm-6">
                                     Dividends Yields
                                         <a class="help" data-toggle="popover"
-                                       title="Price to Earnings Ratio"
+                                       title="Dividends Yields"
                                        data-placement="left"
                                        data-content="">
                                             <i class="feather icon-help-circle"></i></a>
                                     </span>
-                                    <span class="col-sm-3 text-center">{{  "%.2f" | format(data.math.perf7) }}%</span>
-                                    <span class="col-sm-3 text-center"></span>
+                                    <span class="col-sm-3 text-center" id=stock-div_yield">{{  "%.2f" | format(data.math.perf7) }}%</span>
+                                    <span class="col-sm-3 text-center" id="industry-div_yield" data-compare="stock-div_yield"></span>
                                 </div>
                             </div>
                         </div>
@@ -386,18 +388,19 @@
 <script>
 'use strict';
 $(document).ready(function() {
-    fetch('/api/financials?symbol={{ data.yahoo.symbol }}&type=income').then((response) => {
+    fetch('/api/industry?name={{ data.yahoo.industry | urlencode }}').then((response) => {
+        response.json().then((data) => display_data(data, 'industry'))
+    });
+    fetch('/api/financials?symbol={{ data.yahoo.symbol | urlencode }}&type=income').then((response) => {
         response.json().then((data) => show_financial(data, 'income'))
     });
-    fetch('/api/financials?symbol={{ data.yahoo.symbol }}&type=balance').then((response) => {
+    fetch('/api/financials?symbol={{ data.yahoo.symbol | urlencode }}&type=balance').then((response) => {
         response.json().then((data) => show_financial(data, 'balance'))
     });
-    fetch('/api/pytrend?terms={{ data.yahoo.shortName }}').then((response) => {
+    fetch('/api/pytrend?terms={{ data.yahoo.shortName | urlencode }}').then((response) => {
         response.json().then((data) => show_pytrend(data))
     });
-    fetch('/api/industry?name={{ data.yahoo.industry }}').then((response) => {
-        response.json().then((data) => show_industry(data))
-    });
+
 
     setTimeout(function() {
 
@@ -411,7 +414,7 @@ $(document).ready(function() {
         options.chart.height = 320;
         options.annotations.yaxis.push(apex_chart_annotate('y', {{ data.yahoo.twoHundredDayAverage }}, '200 Days Av.'))
         options.annotations.yaxis.push(apex_chart_annotate('y', {{ data.yahoo.fiftyDayAverage }}, '50 Days Av.'))
-        options.chart.group = 'stock';
+        /*options.chart.group = 'stock';*/
         var stock_chart = new ApexCharts(document.querySelector("#stock-main-chart"), options);
         stock_chart.render();
 

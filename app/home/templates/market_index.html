@@ -73,28 +73,47 @@
 {% for continent in data %}
 {% set continentloop = loop %}
 {% for idx in data[continent] %}
-var options=apex_chart_options('chart_{{ continentloop.index }}{{ loop.index }}')
-options.series.push({
-    name: 'Value',
-    type: 'line',
-    data: {{ data[continent][idx].history }}
+'use strict';
+
+$(document).ready(function() {
+    /*
+    fetch('/api/indicator?type=sma&window=200').then((response) => {
+        response.json().then((data) => show_financial(data, 'income'))
+    });
+    */
+    var options=apex_chart_options('chart_{{ continentloop.index }}{{ loop.index }}')
+    options.series.push({
+        name: 'Value',
+        type: 'line',
+        data: {{ data[continent][idx].history }}
+    });
+    /*
+    options.series.push({
+        name: 'SMA200',
+        type: 'line',
+        data: {{ data[continent][idx].sma200 }}
+    });
+    */
+    options.chart.group = 'index';
+    /*options.annotations.yaxis.push(apex_chart_annotate('y', {{ data[continent][idx].d50_average }}, '50 Days Av.'))
+    options.annotations.yaxis.push(apex_chart_annotate('y', {{ data[continent][idx].d200_average }}, '200 Days Av.'))*/
+    options.tooltip.enabled = false;
+    var chart = new ApexCharts(document.querySelector("#chart_{{ continentloop.index }}{{ loop.index }}"), options);
+    chart.render();
+    /*
+    chart.appendSeries({
+      name: 'SMA200',
+      data: {{ data[continent][idx].sma200 }},
+    })
+    */
+
 });
-options.chart.group = 'index';
-options.annotations.yaxis.push(apex_chart_annotate('y', {{ data[continent][idx].d50_average }}, '50 Days Av.'))
-options.annotations.yaxis.push(apex_chart_annotate('y', {{ data[continent][idx].d200_average }}, '200 Days Av.'))
-options.tooltip.enabled = false;
-var chart = new ApexCharts(document.querySelector("#chart_{{ continentloop.index }}{{ loop.index }}"), options);
-chart.render();
 {% endfor %}
 {% endfor %}
 chart.zoomX(
     new Date().setMonth(new Date().getMonth() - 6),
     undefined
 )
-
-
-
-
 </script>
 
 

@@ -50,6 +50,9 @@ function apex_chart_options(id){
         },
         yaxis: {
             decimalsInFloat: 2,
+            labels: {
+                minWidth: "100%",
+            },
         },
         tooltip: {
               x: {
@@ -73,11 +76,10 @@ function apex_chart_options(id){
 function apex_chart_annotate(axis, value, label){
     var annotation = {
         borderColor: '#999',
-
         opacity: 0.3,
         forceNiceScale: true,
         label: {
-            offsetX: 0,
+            offsetX: -100,
             show: true,
             position: 'right',
             text: label,
@@ -121,7 +123,6 @@ function show_pytrend(data, id){
     options.yaxis.max=100;
     options.chart.group = 'stock';
     options.yaxis.min=0;
-    console.log(apex_chart_annotate('y', mean, 'Average'));
     options.annotations.yaxis.push(apex_chart_annotate('y', mean, 'Average'));
 
     var pytrend_chart = new ApexCharts(document.querySelector("#pytrend-chart"), options);
@@ -138,7 +139,7 @@ function show_financial(data, table_id){
                     var cust_class = '';
 
                     if (data[i][key][value] < 0){ cust_class = 'text-c-red' }
-                    tr.append("<td class=" + cust_class + ">" + formatNumber(data[i][key][value]/1000) + "</td>")
+                    tr.append("<td class='f-12 " + cust_class + "'>" + formatNumber(data[i][key][value]/1000) + "</td>")
                     .fadeIn(2000);
                 }
             }
@@ -146,6 +147,35 @@ function show_financial(data, table_id){
         }
    }
 };
+
+function compare_to_format(num, to){
+    /*console.log(to.replace(/\D+/g, ''))*/
+    var a = parseFloat(num);
+    var b = parseFloat(to);
+
+    if (a > b){
+        var str = '<span class="text-c-green">' + num + '</span>';
+    }
+    else {
+        var str = '<span class="text-c-red">' + num + '</span>';
+    }
+
+    return str
+}
+
+function display_data(data, tag){
+    for (var val in data){
+        if($('#'+tag+'-'+val).length){
+            var comp = $('#'+tag+'-'+val).attr('data-compare');
+            if(comp && $('#'+comp.length)){
+               var str = compare_to_format($('#'+comp).text(), data[val])
+                $('#'+comp).html(str);
+            }
+            $('#'+tag+'-'+val).append(data[val]);
+        }
+    }
+};
+
 function formatNumber(num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
