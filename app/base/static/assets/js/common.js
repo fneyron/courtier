@@ -148,6 +148,40 @@ function show_financial(data, table_id){
    }
 };
 
+
+function greater_than(num, to){
+    var a = parseFloat(num);
+    var b = parseFloat(to);
+    return (a>b);
+}
+
+function compare_data(){
+    $('[data-compare-id]').each(function() {
+        var to = $(this).attr('data-compare-id');
+        var compare = $(this).attr('data-compare-value');
+        if(to && $('#'+to).length){
+            console.log($(this).text(), $('#'+to).text());
+            if(compare == 'greater'){
+                if (greater_than($(this).text(), $('#'+to).text())){
+                    var str = '<span class="text-c-green">' + $(this).text() + '</span>';
+                }
+                else {
+                     var str = '<span class="text-c-red">' + $(this).text() + '</span>';
+                }
+            }
+            else if (compare == 'lower'){
+                 if (greater_than($(this).text(), $('#'+to).text())){
+                    var str = '<span class="text-c-red">' + $(this).text() + '</span>';
+                }
+                else {
+                     var str = '<span class="text-c-green">' + $(this).text() + '</span>';
+                }
+            }
+           $(this).html(str);
+        }
+    });
+}
+
 function compare_to_format(num, to){
     /*console.log(to.replace(/\D+/g, ''))*/
     var a = parseFloat(num);

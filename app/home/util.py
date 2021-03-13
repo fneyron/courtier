@@ -146,8 +146,8 @@ def get_series_math(df: pd.Series):
     d50_average = df.tail(50).mean()
     d200_average = df.tail(200).mean()
     sma200 = sma(200, df)
-    perf200 = perf(200, df)
-    perf7 = perf(7, df)
+    perf_1y = perf(365, df)
+    perf_1m = perf(182, df)
     previous = df.iloc[-2]
     last = df.iloc[-1]
 
@@ -159,8 +159,8 @@ def get_series_math(df: pd.Series):
         'last': float(last),
         'd50_average': float(d50_average),
         'd200_average': float(d200_average),
-        'perf200': float(perf200),
-        'perf7': float(perf7)
+        'perf_1y': float(perf_1y),
+        'perf_1m': float(perf_1m)
     }
     return data
 
