@@ -182,8 +182,8 @@ function compare_data(){
     });
 }
 
-function compare_to_format(num, to){
-    /*console.log(to.replace(/\D+/g, ''))*/
+/*function compare_to_format(num, to){
+    console.log(to.replace(/\D+/g, ''))
     var a = parseFloat(num);
     var b = parseFloat(to);
 
@@ -195,16 +195,11 @@ function compare_to_format(num, to){
     }
 
     return str
-}
+}*/
 
 function display_data(data, tag){
     for (var val in data){
         if($('#'+tag+'-'+val).length){
-            var comp = $('#'+tag+'-'+val).attr('data-compare');
-            if(comp && $('#'+comp.length)){
-               var str = compare_to_format($('#'+comp).text(), data[val])
-                $('#'+comp).html(str);
-            }
             $('#'+tag+'-'+val).append(data[val]);
         }
     }
