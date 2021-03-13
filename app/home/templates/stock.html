@@ -292,7 +292,8 @@
                             <div class="card-body">
                                 <div class="row pb-2">
                                     <span class="col-sm-6"></span>
-                                    <span class="col-sm-3 text-center"><i class="feather icon-trending-up f-18"></i></span>
+                                    <span class="col-sm-3 text-center"><i
+                                            class="feather icon-trending-up f-18"></i></span>
                                     <span class="col-sm-3 text-center">
                                         <i class="fas fa-industry f-18"></i>
                                     </span>
@@ -301,12 +302,13 @@
                                     <span class="col-sm-6">
                                     P/E Ratio
                                         <a class="help" data-toggle="popover"
-                                       title="Price to Earnings Ratio"
-                                       data-placement="left"
-                                       data-content="">
+                                           title="Price to Earnings Ratio"
+                                           data-placement="left"
+                                           data-content="">
                                             <i class="feather icon-help-circle"></i></a>
                                     </span>
-                                    <span class="col-sm-3 text-center" data-compare-id="industry-pe" data-compare-value="lower">
+                                    <span class="col-sm-3 text-center" data-compare-id="industry-pe"
+                                          data-compare-value="lower">
                                         {% if data.yahoo.trailingPE is defined %}
                                         {{ "%.2f" | format(data.yahoo.trailingPE) }}
                                         {% else %}
@@ -319,31 +321,39 @@
                                     <span class="col-sm-6">
                                     P/B Ratio
                                         <a class="help" data-toggle="popover"
-                                       title="Price to Book Ratio"
-                                       data-placement="left"
-                                       data-content="">
+                                           title="Price to Book Ratio"
+                                           data-placement="left"
+                                           data-content="">
                                             <i class="feather icon-help-circle"></i></a>
                                     </span>
-                                    <span class="col-sm-3 text-center" data-compare-id="industry-pb" data-compare-value="lower">{{ "%.2f" | format(data.yahoo.priceToBook) }}</span>
+                                    <span class="col-sm-3 text-center" data-compare-id="industry-pb"
+                                          data-compare-value="lower">{{ "%.2f" | format(data.yahoo.priceToBook) }}</span>
                                     <span class="col-sm-3 text-center" id="industry-pb"></span>
                                 </div>
                                 <div class="row">
                                     <span class="col-sm-6">
                                     1 Year Perf.
                                     </span>
-                                    <span class="col-sm-3 text-center" data-compare-id="industry-perf_1y" data-compare-value="greater">{{  "%.2f" | format(data.math.perf_1y) }}%</span>
+                                    <span class="col-sm-3 text-center" data-compare-id="industry-perf_1y"
+                                          data-compare-value="greater">{{  "%.2f" | format(data.math.perf_1y) }}%</span>
                                     <span class="col-sm-3 text-center" id="industry-perf_1y"></span>
                                 </div>
                                 <div class="row">
                                     <span class="col-sm-6">
                                     Dividends Yields
                                         <a class="help" data-toggle="popover"
-                                       title="Dividends Yields"
-                                       data-placement="left"
-                                       data-content="">
+                                           title="Dividends Yields"
+                                           data-placement="left"
+                                           data-content="">
                                             <i class="feather icon-help-circle"></i></a>
                                     </span>
-                                    <span class="col-sm-3 text-center">{{  "%.2f" | format(data.yahoo.dividendYield * 100) }}%</span>
+                                    <span class="col-sm-3 text-center">
+                                        {% if data.yahoo.dividendYield is not none %}
+                                        {{  "%.2f" | format(data.yahoo.dividendYield * 100) }}%
+                                        {% else %}
+                                        N/A
+                                        {% endif %}
+                                    </span>
                                     <span class="col-sm-3 text-center" id="industry-div_yield"></span>
                                 </div>
                             </div>
@@ -483,6 +493,7 @@ $(document).ready(function() {
         })
     }, 700);
 });
+
 
 
 

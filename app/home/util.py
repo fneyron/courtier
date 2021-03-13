@@ -32,7 +32,11 @@ TICK_UNIFY = [
     {'NASDAQ': {
         'yahoo': '',
         'iex': '',
-    }}
+    }},
+    {'MIL': {
+        'yahoo': 'MI',
+        'iex': 'IM',
+    }},
 ]
 
 TICK_SEP = {
