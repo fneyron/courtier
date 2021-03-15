@@ -24,7 +24,6 @@ import yfinance as yf
 os.environ['HTTP_PROXY'] = ""
 os.environ['HTTPS_PROXY'] = ""
 
-@blueprint.route('/index')
 @blueprint.route('/market/index')
 @login_required
 def market_index():
@@ -243,10 +242,10 @@ def autocomplete():
     return json.dumps(res)
 
 
-# @blueprint.route('/index')
-# @login_required
-# def index():
-#     return render_template('index.html', segment='index')
+@blueprint.route('/index')
+@login_required
+def index():
+    return render_template('index.html', segment='index')
 
 
 @blueprint.route('/<template>')
