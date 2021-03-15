@@ -1,19 +1,19 @@
 {
-    "name": "flask-dashboard-gradientable",
-    "mastertemplate": "boilerplate-code-flask-dashboard",
-    "version": "1.0.1",
-    "description": "Template project - Flask Boilerplate Code",
+    "name": "myCourtier",
+    "mastertemplate": "",
+    "version": "1.0.0",
+    "description": "",
     "repository": {
         "type": "git",
-        "url": "https://github.com/app-generator/flask-dashboard-gradientable"
+        "url": "https://github.com/fneyron/portfoliotracker"
     },
     "bugs": {
-        "url": "https://github.com/app-generator/flask-dashboard-gradientable/issues",
-        "email": "support@appseed.us"
+        "url": "https://github.com/fneyron/portfoliotracker/issues",
+        "email": "florent.neyron@gmail.com"
     },
-    "author": "AppSeed App Generator <support@appseed.us> (https://appseed.us)",
+    "author": "Florent NEYRON based on a free appseed template (https://appseed.us)",
     "engines": {
-        "node": ">=10.0.0"
+        "node": ""
     },
     "dependencies": {},
     "devDependencies": {}
