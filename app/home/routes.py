@@ -32,7 +32,7 @@ def market_index():
         'Europe': {'DAX': '^GDAXI'},
         'Asia': {'Nikkei':'^N225'},
     }
-
+    print('test')
     idx_values = [indexes[x][y] for x in indexes for y in indexes[x]]
     #infos = yf.Tickers(' '. join(idx_values))
     df: pd.DataFrame = yf.download(' '. join(idx_values), period='10y')
