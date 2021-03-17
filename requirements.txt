@@ -3,7 +3,7 @@ flask_login
 flask_migrate
 flask_admin
 flask_wtf
-flask_sqlalchemy
+flask_sqlalchemy==2.*
 email_validator
 python-decouple
 gunicorn
@@ -15,7 +15,7 @@ openpyxl
 numpy
 html5lib
 yahoofinancials
-git+https://github.com/ranaroussi/yfinance.git
+yfinance
 psycopg2
 pyEX
 currency_symbols
