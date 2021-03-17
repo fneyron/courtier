@@ -89,15 +89,15 @@ def api_financials():
         'cash': 'cashflowStatementHistory',
     }
     try:
-        financials = YahooFinancials(symbol)
-        data = financials.get_financial_stmts('annual', type)[data[type]][symbol]
-        if type == 'income':
-            for x in data:
-                for y in x:
-                    x[y]['operatingExpenses'] = x[y]['grossProfit'] - x[y]['operatingIncome']
+        financials = yf.Ticker(symbol).financials
+        print(financials)
+        data = financials.to_json(orient='index')
+        print(data)
+        #data = financials.get_financial_stmts('annual', type)[data[type]][symbol]
+
     except: data = []
 
-    return make_response(json.dumps(data), 200)
+    return make_response(data, 200)
 
 
 @blueprint.route('/stock/<ticker>')
