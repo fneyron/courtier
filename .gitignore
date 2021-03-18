@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+# pycharm
+*.idea
+
 # tests and coverage
 *.pytest_cache
 .coverage
