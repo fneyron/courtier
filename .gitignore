@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 
 # pycharm
-*.idea
+.idea/
 
 # tests and coverage
 *.pytest_cache
