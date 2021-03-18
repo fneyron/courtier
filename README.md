@@ -2,7 +2,7 @@
 
 This is a portfolio tracking website written in Python and in active dev.
 Try it:
->   https://my-courtier.herokuapp.com/login
+>   https://courtier.herokuapp.com/login
 
 ## Market
 
