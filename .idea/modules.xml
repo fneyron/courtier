@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/myCourtier.iml" filepath="$PROJECT_DIR$/.idea/myCourtier.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../portfolio_tracker/.idea/portfolio_tracker.iml" filepath="$PROJECT_DIR$/../portfolio_tracker/.idea/portfolio_tracker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/courtier.iml" filepath="$PROJECT_DIR$/.idea/courtier.iml" />
     </modules>
   </component>
 </project>

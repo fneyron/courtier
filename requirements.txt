@@ -16,7 +16,7 @@ openpyxl
 numpy
 html5lib
 yahoofinancials
-yfinance
+git+https://github.com/ranaroussi/yfinance.git
 psycopg2
 pyEX
 currency_symbols

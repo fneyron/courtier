@@ -32,7 +32,7 @@ def market_index():
         'Europe': {'DAX': '^GDAXI'},
         'Asia': {'Nikkei':'^N225'},
     }
-    print('test')
+
     idx_values = [indexes[x][y] for x in indexes for y in indexes[x]]
     #infos = yf.Tickers(' '. join(idx_values))
     df: pd.DataFrame = yf.download(' '. join(idx_values), period='10y')
@@ -84,15 +84,21 @@ def api_financials():
     symbol = request.args.get('symbol')
     type = request.args.get('type')
     data = {
-        'income': 'incomeStatementHistory',
-        'balance': 'balanceSheetHistory',
-        'cash': 'cashflowStatementHistory',
+        'income': 'financials',
+        'balance': 'balance_sheet',
+        'cash': 'cashflow',
     }
     try:
-        financials = yf.Ticker(symbol).financials
-        print(financials)
-        data = financials.to_json(orient='index')
-        print(data)
+        financials: pd.DataFrame = getattr(yf.Ticker(symbol), data[type])
+        financials.index = financials.index.str.replace(' ', '')
+
+        if type == 'income':
+            df = financials.transpose()
+            df['OperatingExpenses'] = df['TotalOperatingExpenses'] - df['CostOfRevenue']
+            financials = df.transpose()
+
+        data = financials.to_json(orient='columns')
+        #print(data)
         #data = financials.get_financial_stmts('annual', type)[data[type]][symbol]
 
     except: data = []

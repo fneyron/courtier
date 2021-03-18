@@ -128,9 +128,32 @@ function show_pytrend(data, id){
     var pytrend_chart = new ApexCharts(document.querySelector("#pytrend-chart"), options);
     pytrend_chart.render();
 };
+
 function show_financial(data, table_id){
+    var tr_head =  $('#'+table_id).find('thead').find('tr')
+
+    for (var date in data){
+        var d = new Date(+date);
+        tr_head.append("<th class='text-center'>" + d.getFullYear() + "</th>").fadeIn(2000);
+        for (var value in data[date]){
+            //console.log(value);
+            var tr = $('#'+table_id).find('#'+value)
+            if (tr.length > 0) {
+                var cust_class = '';
+                if (data[date][value] < 0){ cust_class = 'text-c-red' }
+
+                tr.append("<td class='f-12 " + cust_class + " text-center'>" + formatNumber(data[date][value]/1000) + "</td>")
+                .fadeIn(2000);
+            }
+
+        }
+    }
+}
+
+function show_financial_old(data, table_id){
    for (var i = 0; i < data.length; i++) {
         for (var key in data[i]){
+            console.log(key)
             var tr_head =  $('#'+table_id).find('thead').find('tr')
             tr_head.append("<th>"+ key + "</th>").fadeIn(2000);
             for (var value in data[i][key]){
