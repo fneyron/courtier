@@ -26,7 +26,7 @@ class ProductionConfig(Config):
     REMEMBER_COOKIE_DURATION = 3600
 
     # PostgreSQL database
-    SQLALCHEMY_DATABASE_URI = 'postgres://kqxvoitulxmtju:5d3b3315884179f9c731a18163d2a99646ca0a97ea84fdc47c93d515b76f1780@ec2-54-78-36-245.eu-west-1.compute.amazonaws.com:5432/dfj29d5f51u532'
+    SQLALCHEMY_DATABASE_URI = 'postgres://jghcfqndzbqnyd:e4c3d2e3d16cf2284811236d495baf831d06ba354923a02883dfe785cafa733b@ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/dae3j4so35bc0e'
 
 class DebugConfig(Config):
     DEBUG = True

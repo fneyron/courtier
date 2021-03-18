@@ -3,7 +3,8 @@ flask_login
 flask_migrate
 flask_admin
 flask_wtf
-flask_sqlalchemy==2.*
+flask_sqlalchemy==2.4.1
+sqlalchemy==1.3.17
 email_validator
 python-decouple
 gunicorn
