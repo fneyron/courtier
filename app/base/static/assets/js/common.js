@@ -129,20 +129,38 @@ function show_pytrend(data, id){
     pytrend_chart.render();
 };
 
+function colorize(value){
+    var green_class = 'text-c-green';
+    var red_class = 'text-c-red';
+    if(value > 0){
+        return green_class;
+    }
+    else
+    {
+        return red_class;
+    }
+}
+
 function show_financial(data, table_id){
     var tr_head =  $('#'+table_id).find('thead').find('tr')
 
     for (var date in data){
         var d = new Date(+date);
-        tr_head.append("<th class='text-center'>" + d.getFullYear() + "</th>").fadeIn(2000);
+        tr_head.append("<th>" + d.getFullYear() + "</th>").fadeIn(2000);
         for (var value in data[date]){
             //console.log(value);
             var tr = $('#'+table_id).find('#'+value)
             if (tr.length > 0) {
-                var cust_class = '';
-                if (data[date][value] < 0){ cust_class = 'text-c-red' }
-
-                tr.append("<td class='f-12 " + cust_class + " text-center'>" + formatNumber(data[date][value]/1000) + "</td>")
+                var perf = (function(){
+                    if(data[date][value+'Perf']){
+                        var string = " <span class='" + colorize(data[date][value+'Perf']) + "'>" +
+                         parseFloat(data[date][value+'Perf']*100).toFixed(2) + "%</span>";
+                    }
+                    else var string = "";
+                    return string;
+                })();
+                tr.append("<td class='f-12 " + (function(){if(data[date][value]<0){return 'text-c-red'}}) + " text-center'>" +
+                formatNumber(data[date][value]/1000) + perf + "</td>")
                 .fadeIn(2000);
             }
 

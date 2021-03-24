@@ -88,21 +88,21 @@ def api_financials():
         'balance': 'balance_sheet',
         'cash': 'cashflow',
     }
+    diff = ['TotalRevenue', 'CostOfRevenue', 'GrossProfit']
     try:
         financials: pd.DataFrame = getattr(yf.Ticker(symbol), data[type])
         financials.index = financials.index.str.replace(' ', '')
 
         if type == 'income':
             df = financials.transpose()
+            for d in diff:
+                df[d + 'Perf'] = (df[d] - df[d].shift(-1)) / df[d].shift(-1)
             df['OperatingExpenses'] = df['TotalOperatingExpenses'] - df['CostOfRevenue']
             financials = df.transpose()
+        print(financials)
 
         data = financials.to_json(orient='columns')
-        #print(data)
-        #data = financials.get_financial_stmts('annual', type)[data[type]][symbol]
-
     except: data = []
-
     return make_response(data, 200)
 
 
